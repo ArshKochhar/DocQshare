@@ -3,12 +3,13 @@ import { BsArrowLeft } from 'react-icons/bs'
 import { Link } from 'react-router-dom'
 
 const TopNavigation = () => {
+    var Banner = require('../../assets/DocuShareBanner.jpg');
     return (
-        <div className="w-full h-20">
-            <div className="w-screen fixed bg-queens-yellow">
-                <div className="w-full h-20 grid grid-cols-3">
+        <div className="w-full h-full">
+            <div className="w-screen fixed bg-white shadow-2xl rounded-lg py-2">
+                <div className="w-full h-full grid grid-cols-3">
                     <div className="h-full w-fit flex flex-col justify-center pl-2">
-                        <button className=" bg-queens-blue p-1 rounded-md">
+                        <button className=" bg-queens-blue p-2 rounded-md hover:bg-blue-400">
                             <Link to='/' className=''>
                                 <div className="flex">
                                     <div className="pt-2 pr-1"><BsArrowLeft color='white'/></div>
@@ -17,9 +18,9 @@ const TopNavigation = () => {
                             </Link>
                         </button>
                     </div>
-                    <div className="w-full h-full pt-3">
+                    <div className="w-full h-full py-2">
                         <div className="h-full w-full  flex flex-col items-center text-center">
-                            <h1 className="text-queens-red text-bold text-center text-5xl shrink">*DocQshare Text*</h1>
+                            <img className='h-20 shrink' src={Banner} alt={""} />
                         </div>
                     </div>
                 </div>
