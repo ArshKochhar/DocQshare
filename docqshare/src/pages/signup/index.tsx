@@ -90,7 +90,7 @@ const Signup  = () => {
         <div className='grid place-items-center h-full w-full'>
         <div className='bg-white w-1/4 border-2 h-min rounded-lg shadow-2xl'>
           <div className='flex flex-col items-center w-full'>
-            <img className='h-32 w-32' src={Logo} alt={""}/>
+            <img className='h-32 w-32 object-scale-down' src={Logo} alt={""}/>
             <p className='text-md font-bold'>Start Sharing Files Safely Today!</p>
           </div>
           <div className='w-full flex flex-col items-center pt-8 gap-y-8'>

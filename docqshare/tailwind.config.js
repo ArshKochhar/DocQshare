@@ -8,9 +8,14 @@ module.exports = {
         "queens-blue": '#002452',
         "queens-red": '#b90e31',
         "queens-yellow": '#fabd0f',
-
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('tailwind-scrollbar-hide'),
+    require('tailwindcss-bg-patterns')
+  ],
 }
+
+
+

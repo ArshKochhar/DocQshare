@@ -1,4 +1,3 @@
-import React from 'react'
 import { AiOutlineHome } from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 
@@ -12,8 +11,6 @@ const TopNavigation = () => {
                         <button className=" bg-queens-blue p-2 rounded-md hover:bg-blue-400">
                             <Link to='/' className=''>
                                 <div className="flex">
-                                    {/* <div className="pt-2 pr-1"><BsArrowLeft color='white'/></div>
-                                    <h1 className="text-white text-bold text-xl px-1">Home page</h1> */}
                                     <AiOutlineHome color='white' size={25}/>
                                 </div>
                             </Link>
@@ -21,7 +18,7 @@ const TopNavigation = () => {
                     </div>
                     <div className="w-full h-full py-2">
                         <div className="h-full w-full  flex flex-col items-center text-center">
-                            <img className='h-20 shrink' src={Banner} alt={""} />
+                            <img className='h-20 object-scale-down' src={Banner} alt={""} />
                         </div>
                     </div>
                 </div>
