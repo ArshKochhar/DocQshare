@@ -1,11 +1,16 @@
-import React from 'react'
+import { useState } from 'react';
+import DevSection from '../../components/homepage/dev_section';
 import TopNavigationHome from '../../components/topnavigation/index_home';
 
 const Home = () => {
-  const securityLogo = require('../../assets/security_logo.png');
-  const arsh = require('../../assets/arsh_pfp.jpg');
-  const will = require('../../assets/will_pfp.jpg');
-  const gav = require('../../assets/gav_pfp.jpg')
+  const securityLogo: string = require('../../assets/security_logo.png');
+  const arsh: string = require('../../assets/arsh_pfp.jpg');
+  const will: string = require('../../assets/will_pfp.jpg');
+  const gav: string = require('../../assets/gav_pfp.jpg');
+  const derek: string = require('../../assets/derek_pfp.jpg');
+
+  const [landed, setLanded] = useState<boolean>(false);
+
 
   return (
     <div className='bg-queens-blue w-screen h-screen overflow-auto scrollbar-hide scroll-smooth'>
@@ -13,10 +18,12 @@ const Home = () => {
         <TopNavigationHome 
           howItWorks={'/#howItWorks'}
           aboutUs={'/#aboutUs'}
+          landingPage={'/#landingPage'}
+          landing={setLanded}
         />
       </div>
       {/* LANDING PAGE */}
-      <div id='landingPage' className='w-full h-full flex flex-col items-center justify-center z-0 pt-28'>
+      <div id='landingPage' className={`w-full h-full flex flex-col items-center justify-center z-0 pt-28 transform transition-all ease-out`}>
         <div className='w-full h-full grid grid-cols-2 p-4 place-items-center gap-x-12'>
           <div className='flex pl-12'>
             <div className='w-full h-full m-auto'>
@@ -39,7 +46,7 @@ const Home = () => {
         <div className='w-full h-full flex flex-col items-center px-10'>
           <div className='grid grid-cols-2 bg-queens-blue m-auto rounded-lg p-10 gap-x-10'>
             <div className='flex'>
-              <p className='text-white text-5xl m-auto text-center'>How it works</p>
+              <p className='text-white text-6xl m-auto text-center font-bold'>How it works</p>
             </div>
             <div>
               <p className='text-white text-lg'>
@@ -55,40 +62,32 @@ const Home = () => {
         </div>
       </div>
       {/* ABOUT US */}
-      <div id='aboutUs' className='w-screen h-screen pt-28 bg-queens-blue'>
-        <div className='grid grid-cols-4 p-4 w-full h-full gap-x-4'>
-          <div className='w-full h-full bg-white p-6 rounded-lg'>
-            <div className='w-full h-full'>
-              <img src={will} alt={''} className='w-40 h-40 relative mx-auto rounded-lg overflow-hidden bg-white'/>
-              <p className='text-center w-full text-black text-2xl'>William Kennedy</p>
-              <p className='text-center w-full text-black text-lg'>Full-stack Developer</p>
-              <p className=' w-full text-black text-md pt-10'>
-                Generated the authentication buisiness logic that integrates with the blockchain smart-contracts. 
-                Lead developper of overall frontend architecture. Project SCRUM master and developped test-suites and CI/CD pipeline for development cycle.
-              </p>
-            </div>
-          </div>
-          <div className='w-full h-full bg-white p-6 rounded-lg'>
-            <div className='w-full h-full'>
-              <img src={arsh} alt={''} className='w-40 h-40 relative mx-auto rounded-lg overflow-hidden bg-white'/>
-              <p className='text-center w-full text-black text-2xl'>Arsh Kocchar</p>
-              <p className='text-center w-full text-black text-lg'>Full-stack/Blockchain Developer</p>
-            </div>
-          </div>
-          <div className='w-full h-full bg-white p-6 rounded-lg'>
-            <div className='w-full h-full'>
-              <img src={gav} alt={''} className='w-40 h-40 relative mx-auto rounded-lg overflow-hidden bg-white'/>
-              <p className='text-center w-full text-black text-2xl'>Gavin Anderson</p>
-              <p className='text-center w-full text-black text-lg'>Blockchain Developer</p>
-            </div>
-          </div>
-          <div className='w-full h-full bg-white p-6 rounded-lg'>
-            <div className='w-full h-full'>
-              <img src={securityLogo} alt={''} className='w-40 h-40 relative mx-auto rounded-lg overflow-hidden bg-white'/>
-              <p className='text-center w-full text-black text-2xl'>Derek Gunda</p>
-              <p className='text-center w-full text-black text-lg'>Cloud/Back-end developer</p>
-            </div>
-          </div>
+      <div id='aboutUs' className='w-screen h-screen pt-28 bg-queens-blue z-0'>
+        <div className='grid grid-cols-4 p-4 w-full h-3/4 gap-x-4 place-items-center'>
+          <DevSection
+            img={will}
+            name={'William Kennedy'}
+            role={'Full-stack Developer'}
+            description={'Generated the authentication business logic that integrates with the blockchain smart-contracts. Lead developper of overall frontend architecture. Project SCRUM master and developped test-suites and CI/CD pipeline for development cycle.'}
+            />
+          <DevSection
+            img={arsh}
+            name={'Arsh Kocchar'}
+            role={'Full-stack/Blockchain Developer'}
+            description={''}
+            />
+          <DevSection
+            img={gav}
+            name={'Gavin Anderson'}
+            role={'Blockchain Developer'}
+            description={''}
+            />
+          <DevSection
+            img={derek}
+            name={'Derek Gunda'}
+            role={'Cloud/Back-end developer'}
+            description={''}
+            />
         </div>
       </div>
     </div>

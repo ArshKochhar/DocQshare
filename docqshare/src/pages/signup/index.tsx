@@ -10,7 +10,6 @@ declare var window: any
 export interface AccountObject {
   userName: string | null;
   walletId: string | null;
-  token: BigInt | null;
 }
 
 export interface MsgObject {
@@ -26,7 +25,6 @@ const Signup  = () => {
   const [user, setUser] = useState<AccountObject>({
     userName: null,
     walletId: null,
-    token: null
   });
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -54,7 +52,6 @@ const Signup  = () => {
         axios.post("http://localhost:3500/auth/signup", 
           { userName: user.userName,
             walletId: user.walletId,
-            token: null
           }, {
             headers: {
               'Authorization': token,
@@ -65,6 +62,9 @@ const Signup  = () => {
             // successful response message is displayed
             setIsLoading(false);
             changeMessage(response.data.color, response.data.message);
+          }).catch(error => {
+            setIsLoading(false);
+            changeMessage("bg-red-600", "could not authenticate user - please try again.")
           })
       } catch (err) {
         setIsLoading(false);

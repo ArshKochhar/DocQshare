@@ -3,9 +3,11 @@ import { Link } from 'react-router-dom';
 export interface navParams {
     howItWorks: string,
     aboutUs: string,
+    landingPage: string,
+    landing: (landed: boolean) => void;
 }
 
-const TopNavigationHome = ({howItWorks, aboutUs}: navParams) => {
+const TopNavigationHome = ({howItWorks, aboutUs, landingPage, landing}: navParams) => {
     var Banner = require('../../assets/DocuShareBanner.jpg');
     return (
         <div className="w-full h-full">
@@ -13,7 +15,10 @@ const TopNavigationHome = ({howItWorks, aboutUs}: navParams) => {
                 <div className="w-full h-full grid grid-cols-3">
                     <div className="w-full h-full">
                         <div className="h-full w-fit items-left text-center pl-4">
+                        <a href={landingPage} className='' onClick={() => landing(true)}>
                             <img className='h-20 object-scale-down' src={Banner} alt={""} />
+                        </a>
+                            
                         </div>
                     </div>
                     <div></div>
