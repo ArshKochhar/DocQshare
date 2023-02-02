@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import TopNavigation from "../../components/topnavigation";
 import MetaMaskButton from "../../components/buttons/metaMaskButton";
@@ -47,39 +47,31 @@ const Signup  = () => {
       await window.ethereum.request({method: 'eth_requestAccounts'});
       window.web3 = new Web3(window.ethereum);
       setIsLoading(true);
-      try {
-        const token = await Web3Token.sign((msg: string) => window.web3.eth.personal.sign(msg, user.walletId), '1h');
-        axios.post("http://localhost:3500/auth/signup", 
-          { userName: user.userName,
-            walletId: user.walletId,
-          }, {
-            headers: {
-              'Authorization': token,
-            }
-          }).then(response => {
-            // token is stored on client-side 
-            localStorage.setItem("authToken", token);
-            // successful response message is displayed
-            setIsLoading(false);
-            changeMessage(response.data.color, response.data.message);
-          }).catch(error => {
-            setIsLoading(false);
-            changeMessage("bg-red-600", "could not authenticate user - please try again.")
-          })
-      } catch (err) {
-        setIsLoading(false);
-        changeMessage("bg-red-600", "could not authenticate user - please try again.")
-      }
+      const token = await Web3Token.sign((msg: string) => window.web3.eth.personal.sign(msg, user.walletId), '1h');
+      axios.post("http://localhost:3500/auth/signup", 
+        { userName: user.userName,
+          walletId: user.walletId,
+        }, {
+          headers: {
+            'Authorization': token,
+          }
+        }).then(response => {
+          // token is stored on client-side 
+          localStorage.setItem("authToken", token);
+          // successful response message is displayed
+          setIsLoading(false);
+          changeMessage(response.data.color, response.data.message);
+          setTimeout(window.location.replace("http://localhost:3000/account"), 100);
+        }).catch((error: any) => {
+          setIsLoading(false);
+          changeMessage("bg-red-600", error.response.data.message);
+        });
     }
   }
 
   const onSubmit = async (e: any) => {
     signUp();
   }
-
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
 
   return (
     <div className='bg-page-bg w-screen h-screen overflow-hidden'>
@@ -94,7 +86,7 @@ const Signup  = () => {
             <p className='text-md font-bold'>Start Sharing Files Safely Today!</p>
           </div>
           <div className='w-full flex flex-col items-center pt-8 gap-y-8'>
-            {(msg || isLoading) &&  <div className={`w-2/3 rounded-lg ${!isLoading && msg?.color}`}>
+            {(msg || isLoading) &&  <div className={`w-2/3 text-sm rounded-lg p-2 ${!isLoading && msg?.color}`}>
               {isLoading ? <div className='flex flex-col items-center'><Spinner/></div> : msg && <p className='text-white text-center py-1 rounded-md'>{msg.message}</p>}
             </div>}
             <input 

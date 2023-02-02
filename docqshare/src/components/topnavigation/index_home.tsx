@@ -4,10 +4,9 @@ export interface navParams {
     howItWorks: string,
     aboutUs: string,
     landingPage: string,
-    landing: (landed: boolean) => void;
 }
 
-const TopNavigationHome = ({howItWorks, aboutUs, landingPage, landing}: navParams) => {
+const TopNavigationHome = ({howItWorks, aboutUs, landingPage}: navParams) => {
     var Banner = require('../../assets/DocuShareBanner.jpg');
     return (
         <div className="w-full h-full">
@@ -15,17 +14,16 @@ const TopNavigationHome = ({howItWorks, aboutUs, landingPage, landing}: navParam
                 <div className="w-full h-full grid grid-cols-3">
                     <div className="w-full h-full">
                         <div className="h-full w-fit items-left text-center pl-4">
-                        <a href={landingPage} className='' onClick={() => landing(true)}>
-                            <img className='h-20 object-scale-down' src={Banner} alt={""} />
-                        </a>
-                            
+                            <a href={landingPage} className='scroll-smooth'>
+                                <img className='h-20 object-scale-down' src={Banner} alt={""} />
+                            </a>
                         </div>
                     </div>
                     <div></div>
                     <div className="w-full h-full grid grid-flow-col-dense items-center">
                         <div>            
                         <button className="p-2 rounded-md">
-                                <a href={howItWorks} className=''>
+                                <a href={howItWorks} className='scroll-smooth'>
                                     <p className="text-center text-gray-600 hover:text-black hover:font-bold">
                                         How it works
                                     </p>
@@ -34,7 +32,7 @@ const TopNavigationHome = ({howItWorks, aboutUs, landingPage, landing}: navParam
                         </div>   
                         <div>            
                         <button className="p-2 rounded-md">
-                                <a href={aboutUs} className=''>
+                                <a href={aboutUs} className='scroll-smooth'>
                                     <p className="text-center text-gray-600 hover:text-black hover:font-bold">
                                         About us
                                     </p>
@@ -51,7 +49,7 @@ const TopNavigationHome = ({howItWorks, aboutUs, landingPage, landing}: navParam
                             </button>
                         </div>
                         <div>            
-                        <button className="p-2 rounded-md">
+                        <div className="p-2 rounded-md">
                                 <button className=' bg-queens-blue rounded-lg p-2 hover:bg-blue-400'>
                                     <Link to='/signup' >
                                         <p className="text-center text-white ">
@@ -59,7 +57,7 @@ const TopNavigationHome = ({howItWorks, aboutUs, landingPage, landing}: navParam
                                         </p>
                                     </Link>
                                 </button>
-                            </button>
+                            </div>
                         </div>
                     </div>
                 </div>

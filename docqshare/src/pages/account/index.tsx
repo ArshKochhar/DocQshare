@@ -1,8 +1,12 @@
-import React from 'react'
+import Authentication from "../../components/authentication"
+
 
 function AccountPage() {
     return (
-        <div>AccountPage</div>
+        <Authentication >
+            <div>This Is The Account Page</div>
+        </Authentication>
+        
     )
 }
 

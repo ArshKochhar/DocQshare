@@ -9,7 +9,6 @@ const Home = () => {
   const gav: string = require('../../assets/gav_pfp.jpg');
   const derek: string = require('../../assets/derek_pfp.jpg');
 
-  const [landed, setLanded] = useState<boolean>(false);
 
 
   return (
@@ -19,11 +18,10 @@ const Home = () => {
           howItWorks={'/#howItWorks'}
           aboutUs={'/#aboutUs'}
           landingPage={'/#landingPage'}
-          landing={setLanded}
         />
       </div>
       {/* LANDING PAGE */}
-      <div id='landingPage' className={`w-full h-full flex flex-col items-center justify-center z-0 pt-28 transform transition-all ease-out`}>
+      <div id='landingPage' className={`w-full h-full flex flex-col items-center justify-center z-0 pt-28 transform transition-all ease-out scroll-smooth`}>
         <div className='w-full h-full grid grid-cols-2 p-4 place-items-center gap-x-12'>
           <div className='flex pl-12'>
             <div className='w-full h-full m-auto'>
