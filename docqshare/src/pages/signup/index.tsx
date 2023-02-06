@@ -113,7 +113,7 @@ const Signup  = () => {
           </div>
         </div>
           <div className='w-1/4 py-4 flex flex-col items-center bg-white rounded-md shadow-2xl'>
-            <p>Already have an account? <a href="/register" className="no-underline hover:underline text-blue-500 text-bold">Login In</a></p>
+            <p>Already have an account? <a href="/login" className="no-underline hover:underline text-blue-500 text-bold">Login</a></p>
           </div>
         <div>
         </div>
