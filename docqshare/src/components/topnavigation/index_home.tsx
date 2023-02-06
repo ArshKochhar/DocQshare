@@ -43,7 +43,7 @@ const TopNavigationHome = ({howItWorks, aboutUs, landingPage}: navParams) => {
                         <button className="p-2 rounded-md">
                                 <Link to='/login' className=''>
                                     <p className="text-center text-gray-600 hover:text-black hover:font-bold">
-                                        Sign in
+                                        Login
                                     </p>
                                 </Link>
                             </button>
