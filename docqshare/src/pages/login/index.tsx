@@ -5,6 +5,8 @@ import MetaMaskButton from "../../components/buttons/metaMaskButton";
 import Web3Token from "web3-token";
 import Web3 from "web3";
 import { Spinner } from "../../components/loading/spinner";
+import { useDispatch, useSelector } from "react-redux";
+import { User } from "../../redux/userSlice";
 declare var window: any
 
 export interface AccountObject {
@@ -18,7 +20,10 @@ export interface MsgObject {
 }
 
 const Login  = () => {
-  var Logo = require('../../assets/logo.jpg');
+  // const dispatch = useDispatch();
+  // const userState: User = useSelector(
+  //   (state: any) => state.user
+  // );
 
   const [msg, setMsg] = useState<MsgObject | null>(null);
 

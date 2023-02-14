@@ -4,10 +4,13 @@ import Login from './pages/login'
 import './index.css'
 import Signup from './pages/signup';
 import AccountPage from './pages/account';
+import { Provider } from 'react-redux';
+import store from './redux/store';
 
 function App() {
     return (
     <div className="App">
+        <Provider store={store}>
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Home/>}/>
@@ -16,6 +19,7 @@ function App() {
                 <Route path="/account" element={<AccountPage/>}/>
             </Routes>
         </BrowserRouter>
+        </Provider>
     </div>
 );
 }

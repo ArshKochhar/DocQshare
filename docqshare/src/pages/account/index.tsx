@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import SentFileTable from "../../components/account/sentFileTable";
 import SideBar from "../../components/account/sidebar"
 import Authentication from "../../components/authentication"
+import { motion } from "framer-motion"
 
 function AccountPage() {
 
@@ -17,7 +18,11 @@ function AccountPage() {
 
     return (
         <Authentication >
-            <div className="w-screen h-screen bg-page-bg overflow-auto scrollbar-hide scroll-smooth">
+            <motion.div 
+            className="w-screen h-screen bg-page-bg overflow-auto scrollbar-hide scroll-smooth"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            >
                 <div className="absolute top-0 right-0">
                     <div className="flex justify-end p-2 relative z-0">
                         <button className=' rounded-lg p-2 text-black hover:font-bold' onClick={logOut}>
@@ -46,7 +51,7 @@ function AccountPage() {
                         {sentFiles && <SentFileTable/>}
                     </div>
                 </div>
-            </div>
+            </motion.div>
         </Authentication>
     )
 }
