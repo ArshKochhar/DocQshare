@@ -9,7 +9,6 @@ const Authentication = ({ children }: { children: any}) => {
     const [loading, setLoading] = useState<boolean>(true);
     const token = localStorage.getItem("authToken");
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         setLoading(true);
         if (token) {
@@ -18,16 +17,14 @@ const Authentication = ({ children }: { children: any}) => {
                 headers: {
                 'Authorization': token,
                 }
-            }).then((response: any) => {
-                console.log(response.data.message);
+            }).then(() => {
+                setLoading(false);
                 setVerified(true);
-                setLoading(false);
                 return;
-            }).catch((error: any) => {
+            }).catch(() => {
                 localStorage.removeItem("authToken");
-                console.log(error);
-                setVerified(false);
                 setLoading(false);
+                setVerified(false);
                 return;
             });
         } else {
@@ -44,8 +41,11 @@ const Authentication = ({ children }: { children: any}) => {
     if (!loading && verified) {
         return children
     }
-
-    return <ClipLoader color="#FFFFFF" loading/>
-
+    
+    return (
+        <div className="flex justify-center items-center h-screen">
+            <ClipLoader color="#000000" size='300' loading/>
+        </div>
+    );
 };
 export default Authentication;
