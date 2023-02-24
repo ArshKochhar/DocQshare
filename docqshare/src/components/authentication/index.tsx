@@ -9,22 +9,23 @@ const Authentication = ({ children }: { children: any}) => {
     const [loading, setLoading] = useState<boolean>(true);
     const token = localStorage.getItem("authToken");
 
+
     useEffect(() => {
         setLoading(true);
         if (token) {
             axios.post("http://localhost:3500/auth/verify", { }, 
             {
                 headers: {
-                'Authorization': token,
+                    'Authorization': token,
                 }
             }).then(() => {
                 setLoading(false);
                 setVerified(true);
                 return;
             }).catch(() => {
-                localStorage.removeItem("authToken");
                 setLoading(false);
                 setVerified(false);
+                localStorage.removeItem("authToken");
                 return;
             });
         } else {
@@ -44,7 +45,7 @@ const Authentication = ({ children }: { children: any}) => {
     
     return (
         <div className="flex justify-center items-center h-screen">
-            <ClipLoader color="#000000" size='300' loading/>
+            <ClipLoader color="#000000" size='300px' loading/>
         </div>
     );
 };

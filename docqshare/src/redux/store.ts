@@ -4,7 +4,7 @@ import user from "./userSlice";
 
 const store = configureStore({
     reducer: {
-        user,
+        user
     },
     middleware: [thunk],
 });

@@ -6,6 +6,8 @@ import SideBar from "../../components/account/sidebar"
 import Authentication from "../../components/authentication"
 import { motion } from "framer-motion"
 
+declare var window: any
+
 function AccountPage() {
 
     const [ sentFiles, setSendFiles ] = useState(true);
@@ -14,12 +16,13 @@ function AccountPage() {
 
     const logOut = () => {
         localStorage.removeItem('authToken');
+        setTimeout(window.location.replace("http://localhost:3000/login"), 100);
     }
 
     return (
         <Authentication >
             <motion.div 
-            className="w-screen h-screen bg-page-bg overflow-auto scrollbar-hide scroll-smooth"
+            className="w-screen h-screen bg-page-bg"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             >
