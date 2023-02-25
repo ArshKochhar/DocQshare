@@ -62,14 +62,17 @@ export const UserSlice = createSlice({
             state.currentFile.accessor = payload.accessor;
             state.currentFile.owner = payload.owner;
         },
+        addCurrentFileAccessor: (state, { payload }: { payload: any }) => {
+            if (state.currentFile) state.currentFile.accessor = [...state.currentFile.accessor, payload];
+        },
         setCurrentFileAccessorList: (state, { payload }: { payload: any }) => {
             if (state.currentFile) state.currentFile.accessor = [...payload];
         },
         setCurrentFileName: (state, { payload }: { payload: any }) => {
             if (state.currentFile) state.currentFile.name = payload.name;
-        }
+        },
     }
 })
 
 export default UserSlice.reducer;
-export const { setUser, setUserName, setWalletId, addFileToList, removeFile, setCurrentFile, setCurrentFileAccessorList } = UserSlice.actions;
+export const { setUser, setUserName, setWalletId, addFileToList, removeFile, setCurrentFile, setCurrentFileAccessorList, addCurrentFileAccessor } = UserSlice.actions;

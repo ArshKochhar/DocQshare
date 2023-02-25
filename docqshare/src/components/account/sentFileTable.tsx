@@ -1,11 +1,38 @@
 import { motion } from 'framer-motion';
-import { useSelector } from 'react-redux';
-import { FileObj, User } from 'src/redux/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { FileObj, User, addFileToList, setWalletId } from 'src/redux/userSlice';
 import AddFile from './addFIle';
+import { useEffect } from 'react';
+import axios from 'axios';
 
 function SentFileTable() {
+    const dispatch = useDispatch<any>();
     const userState: User = useSelector((state: any) => state.user);
-    const { files } = userState;
+    const { currentFile, files} = userState;
+
+    const token = localStorage.getItem("authToken");
+
+    useEffect(() => {
+        // await window.ethereum.request({method: 'eth_requestAccounts'});
+        // window.web3 = new Web3(window.ethereum);
+        // const requestedAccounts = await window.web3.eth.requestAccounts();
+        // dispatch(setWalletId(requestedAccounts))
+        axios.post("http://localhost:3500/file/getOwnedFiles", 
+        { 
+            owner: "0x133E168433Bea1260e41961a6357Da40eE1Db533"
+        }, 
+        {
+            headers: {
+                'Authorization': token,
+            }
+        }).then(async (response) => {
+            console.log(response);
+            return;
+        }).catch((err) => {
+            console.log(err)
+            return;
+        });
+    }, []);
 
     return (
         <motion.div 
@@ -22,7 +49,7 @@ function SentFileTable() {
                 </div>
             </div>
             <div className='w-full pt-[42px]'/>
-            <table className='inset-0 w-full table-fixed pb-10 overflow-hidden'>
+            <table className='inset-0 w-full table-fixed pb-10 overflow-hidden border-2 border-page-bg p-1'>
                 <tbody className='w-full'>
                     {files.map((file: FileObj) => {
                         return (
