@@ -99,7 +99,7 @@ export default function AddFile() {
 
     const handleAddRecipient = async(): Promise<void> => {
             // check if wallet is of a valid DocQshare user
-            if (currRecipient) {
+            if (currRecipient && !currentFile.accessor.includes(currRecipient)) {
             axios.post("http://localhost:3500/auth/checkWallet", { walletId: currRecipient}, 
             {
                 headers: {
@@ -119,6 +119,12 @@ export default function AddFile() {
                     setMsg(null);
                 }, 1000)
             })
+        }
+        else {
+            changeMessage('bg-red-600', 'Recipient already added');
+            setTimeout(() => {
+                setMsg(null);
+            }, 1000)
         }
     }
 

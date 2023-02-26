@@ -4,6 +4,8 @@ import { FileObj, User, addFileToList, setWalletId } from 'src/redux/userSlice';
 import AddFile from './addFIle';
 import { useEffect } from 'react';
 import axios from 'axios';
+import Web3 from 'web3';
+declare var window: any
 
 function SentFileTable() {
     const dispatch = useDispatch<any>();
@@ -12,26 +14,39 @@ function SentFileTable() {
 
     const token = localStorage.getItem("authToken");
 
-    useEffect(() => {
-        // await window.ethereum.request({method: 'eth_requestAccounts'});
-        // window.web3 = new Web3(window.ethereum);
-        // const requestedAccounts = await window.web3.eth.requestAccounts();
-        // dispatch(setWalletId(requestedAccounts))
+    const getOwnedFiles = async () => { 
+        await window.ethereum.request({method: 'eth_requestAccounts'});
+        window.web3 = new Web3(window.ethereum);
+        const requestedAccounts = await window.web3.eth.requestAccounts();
+        dispatch(setWalletId(requestedAccounts))
         axios.post("http://localhost:3500/file/getOwnedFiles", 
         { 
-            owner: "0x133E168433Bea1260e41961a6357Da40eE1Db533"
+            owner: requestedAccounts[0]
         }, 
         {
-            headers: {
+            headers: { 
                 'Authorization': token,
             }
         }).then(async (response) => {
-            console.log(response);
+            const files = response.data.files.map((file: any) => {return { 
+                id: file.file_id, 
+                accessor: response.data.accessors.filter((acc: any) => acc.file_id === file.file_id).map((acc: any) => acc.wallet_id),
+                name: 'test',
+                payload: file.file,
+                owner: file.Owner,
+                hash: file.Hash
+            }});
+
+            files.forEach((file: FileObj) => {dispatch(addFileToList(file))});
             return;
         }).catch((err) => {
             console.log(err)
             return;
         });
+    };
+
+    useEffect(() => {
+        getOwnedFiles();
     }, []);
 
     return (
@@ -53,7 +68,7 @@ function SentFileTable() {
                 <tbody className='w-full'>
                     {files.map((file: FileObj) => {
                         return (
-                            <tr key={file.hash} className='w-full h-[300px] border-b-2 border-page-bg'>
+                            <tr key={file.id} className='w-full h-[300px] border-b-2 border-page-bg'>
                                 <td className='w-1/2 h-[300px] text-black font-bold text-center text-xs p-2'>
                                     <div className='w-full h-full'>
                                         <div className='overflow-auto scrollbar-hide border-2 border-black rounded-md bg-page-bg'>
