@@ -71,8 +71,11 @@ export const UserSlice = createSlice({
         setCurrentFileName: (state, { payload }: { payload: any }) => {
             if (state.currentFile) state.currentFile.name = payload.name;
         },
+        setListOfFiles: (state, { payload }: { payload: any }) => {
+            state.files = [...payload];
+        },
     }
 })
 
 export default UserSlice.reducer;
-export const { setUser, setUserName, setWalletId, addFileToList, removeFile, setCurrentFile, setCurrentFileAccessorList, addCurrentFileAccessor } = UserSlice.actions;
+export const { setUser, setUserName, setWalletId, addFileToList, removeFile, setCurrentFile, setCurrentFileAccessorList, addCurrentFileAccessor, setListOfFiles} = UserSlice.actions;

@@ -6,7 +6,6 @@ interface RecipientProps {
 
 
 const AddRecipientButton = ({currentRecipient, setCurrentRecipient, handleAddRecipient}: RecipientProps) => {
-
     return (
         <>
             <div className="mt-2 h-full w-1/2 flex pb-4">
