@@ -10,14 +10,15 @@ export interface MsgObject {
     color: string;
 }
 
-function AddRecipient({file}: {file: FileObj}) {
+function AddRecipient({file, getFiles}: {file: FileObj, getFiles: () => void }) {
     const dispatch = useDispatch<any>();
     const userState: User = useSelector((state: any) => state.user);
-    const { currentFile } = userState;
+    const { currentFile, walletId } = userState;
     
     let [isOpen, setIsOpen] = useState(false);
 
     function closeModal() {
+        getFiles()
         setIsOpen(false);
     }
 
@@ -36,45 +37,73 @@ function AddRecipient({file}: {file: FileObj}) {
 
     const handleAddRecipient = async(): Promise<void> => {
         // check if wallet is of a valid DocQshare user
-        if (currRecipient && !currentFile.accessor.includes(currRecipient)) {
-        axios.post("http://localhost:3500/auth/checkWallet", { walletId: currRecipient}, 
-        {
-            headers: {
-                'Authorization': token,
-            }
-        }).then((response: any) => {
-            changeMessage(response.data.color, response.data.message);
-            dispatch(addCurrentFileAccessor(currRecipient));
+        if (walletId && currRecipient === walletId[0]) {
+            changeMessage('bg-red-600', 'Cannot Add Yourself.');
+            setTimeout(() => {
+                setMsg(null);
+            }, 500);
             setCurrRecipient("");
+        }
+        else if (currRecipient && !currentFile.accessor.includes(currRecipient)) {
+            axios.post("http://localhost:3500/auth/checkWallet", { walletId: currRecipient}, 
+            {
+                headers: {
+                    'Authorization': token,
+                }
+            }).then((response: any) => {
+                changeMessage(response.data.color, "Verified User Check Passed.");
+                dispatch(addCurrentFileAccessor(currRecipient));
+                setCurrRecipient("");
+                setTimeout(() => {
+                    setMsg(null);
+                }, 500)
+            }).catch((error: any) => {
+                changeMessage(error.response.data.color, error.response.data.message);
+                setTimeout(() => {
+                    setMsg(null);
+                }, 500)
+            })
+        }
+        else {
+            changeMessage('bg-red-600', 'Recipient Already Added.');
             setTimeout(() => {
                 setMsg(null);
-            }, 1000)
-        }).catch((error: any) => {
-            changeMessage(error.response.data.color, error.response.data.message);
-            setTimeout(() => {
-                setMsg(null);
-            }, 1000)
-        })
-    }
-    else {
-        changeMessage('bg-red-600', 'Recipient already added');
+            }, 500);
+        };
+    };
+
+    const handleRemoveRecipient = (recipient: string) => {
+        dispatch(setCurrentFileAccessorList([...currentFile.accessor.filter((r: string) => r !== recipient)]));
+        changeMessage("bg-green-600", "Succesfully Removed");
         setTimeout(() => {
             setMsg(null);
-        }, 1000)
-    }
-}
+        }, 1000);
+    };
 
-const handleRemoveRecipient = (recipient: string) => {
-    dispatch(setCurrentFileAccessorList([...currentFile.accessor.filter((r: string) => r !== recipient)]));
-    changeMessage("bg-green-600", "Succesfully Removed");
-    setTimeout(() => {
-        setMsg(null);
-    }, 1000)
-} 
-    
+    const handleSubmit = async () => {
+        try {
+            axios.post("http://localhost:3500/file/updateAccessors", { file_id: currentFile.id, accessors: currentFile.accessor}, 
+            {
+                headers: {
+                    'Authorization': token,
+                }
+            }).then((response: any) => {
+                changeMessage(response.data.color, response.data.message);
+                dispatch(setCurrentFileAccessorList([...response.data.accessor.map((accessor: {file_id: string, wallet_id: string}) => accessor.wallet_id)]));
+                setTimeout(() => {
+                    setMsg(null);
+                }, 1000);
+            }).catch((error: any) => {
+                console.log(error);
+            });
+        } catch(err) {
+            console.log(err);
+        }
+    }
+
     return (
         <>
-            <div>
+            <div className='w-full'>
                 <button className="rounded-md py-2 w-full bg-queens-blue px-4 text-sm font-medium text-white hover:bg-blue-400" onClick={openModal}>Edit Accessor(s)</button>
             </div>
             <Transition appear show={isOpen} as={Fragment}>
@@ -128,6 +157,17 @@ const handleRemoveRecipient = (recipient: string) => {
                                                         </div>
                                                     </div>
                                                 }
+                                            </div>
+                                            <div className="w-full flex flex-col items-center pt-4">
+                                                <div className="w-1/2">
+                                                    {currentFile.accessor.length !==0 && 
+                                                        <button 
+                                                            className="rounded-md py-2 w-full h-full bg-queens-blue px-4 text-sm font-medium text-white hover:bg-blue-400 "
+                                                            onClick={() => {handleSubmit()}}>
+                                                            Save
+                                                        </button>
+                                                    }
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

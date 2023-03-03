@@ -16,7 +16,7 @@ export interface MsgObject {
 export default function AddFile() {
     const dispatch = useDispatch<any>();
     const userState: User = useSelector((state: any) => state.user);
-    const { currentFile } = userState;
+    const { currentFile, walletId } = userState;
 
     let [isOpen, setIsOpen] = useState(false);
     const [fileSnapshot, setFileSnapshot] = useState<any>(null);
@@ -99,7 +99,14 @@ export default function AddFile() {
 
     const handleAddRecipient = async(): Promise<void> => {
             // check if wallet is of a valid DocQshare user
-            if (currRecipient && !currentFile.accessor.includes(currRecipient)) {
+            if (walletId && currRecipient === walletId[0]) {
+                changeMessage('bg-red-600', 'Cannot Add Yourself.');
+                setTimeout(() => {
+                    setMsg(null);
+                }, 500);
+                setCurrRecipient("");
+            }
+            else if (currRecipient && !currentFile.accessor.includes(currRecipient)) {
             axios.post("http://localhost:3500/auth/checkWallet", { walletId: currRecipient}, 
             {
                 headers: {
@@ -108,29 +115,28 @@ export default function AddFile() {
             }).then((response: any) => {
                 changeMessage(response.data.color, response.data.message);
                 dispatch(addCurrentFileAccessor(currRecipient));
-                console.log(currentFile.accessor)
                 setCurrRecipient("");
                 setTimeout(() => {
                     setMsg(null);
-                }, 1000)
+                }, 500)
             }).catch((error: any) => {
                 changeMessage(error.response.data.color, error.response.data.message);
                 setTimeout(() => {
                     setMsg(null);
-                }, 1000)
+                }, 500)
             })
         }
         else {
-            changeMessage('bg-red-600', 'Recipient already added');
+            changeMessage('bg-red-600', 'Recipient Already Added.');
             setTimeout(() => {
                 setMsg(null);
-            }, 1000)
+            }, 500)
         }
     }
 
     const handleRemoveRecipient = (recipient: string) => {
         dispatch(setCurrentFileAccessorList([...currentFile.accessor.filter((r: string) => r !== recipient)]));
-        changeMessage("bg-green-600", "Succesfully Removed");
+        changeMessage("bg-green-600", "Succesfully Removed.");
         setTimeout(() => {
             setMsg(null);
         }, 1000)
@@ -259,7 +265,8 @@ export default function AddFile() {
                                                             className="rounded-md py-2 w-full h-full bg-queens-blue px-4 text-sm font-medium text-white hover:bg-blue-400 "
                                                             onClick={() => {handleSubmit()}}>
                                                             Submit
-                                                        </button>}
+                                                        </button>
+                                                    }
                                                 </div>
                                             </div>
                                         </div>

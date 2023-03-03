@@ -11,23 +11,21 @@ declare var window: any
 function SentFileTable() {
     const dispatch = useDispatch<any>();
     const userState: User = useSelector((state: any) => state.user);
-    const { files} = userState;
-
+    const { files } = userState;
     const token = localStorage.getItem("authToken");
 
-    const getOwnedFiles = async () => { 
+    const getOwnedFiles = async () => {
         await window.ethereum.request({method: 'eth_requestAccounts'});
         window.web3 = new Web3(window.ethereum);
         const requestedAccounts = await window.web3.eth.requestAccounts();
-        dispatch(setWalletId(requestedAccounts))
+        dispatch(setWalletId(requestedAccounts));
+    
         axios.post("http://localhost:3500/file/getOwnedFiles", 
         { 
             owner: requestedAccounts[0]
         }, 
         {
-            headers: { 
-                'Authorization': token,
-            }
+            headers: { 'Authorization': token }
         }).then(async (response) => {
             const files = response.data.files.map((file: any) => {return { 
                 id: file.file_id, 
@@ -90,7 +88,7 @@ function SentFileTable() {
                                         </div>
                                     }
                                     <div className='w-full flex flex-row gap-x-2 pt-4 h-[50px]'>
-                                        <AddRecipient file={file} />
+                                        <AddRecipient file={file}  getFiles={getOwnedFiles} />
                                         <button className="rounded-md py-2 w-full bg-queens-blue px-4 text-sm font-medium text-white hover:bg-blue-400 ">Transfer Ownership</button>
                                     </div>
                                 </td>
