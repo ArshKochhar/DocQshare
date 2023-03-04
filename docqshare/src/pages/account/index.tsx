@@ -5,6 +5,7 @@ import SentFileTable from "../../components/account/sentFileTable";
 import SideBar from "../../components/account/sidebar"
 import Authentication from "../../components/authentication"
 import { motion } from "framer-motion"
+import AccessorFileTable from "src/components/account/accessorFileTable";
 
 declare var window: any
 
@@ -12,7 +13,6 @@ function AccountPage() {
 
     const [ sentFiles, setSendFiles ] = useState(true);
     const [ recievedFiles, setRecievedFiles ] = useState(false);
-    const [ accountSettings, setAccountSettings ] = useState(false);
 
     const logOut = () => {
         localStorage.removeItem('authToken');
@@ -46,12 +46,10 @@ function AccountPage() {
                             setSentFiles={setSendFiles}
                             recievedFiles={recievedFiles}
                             setRecievedFiles={setRecievedFiles}
-                            accountSettings={accountSettings}
-                            setAccountSettings={setAccountSettings}
                         ></SideBar>
                     </div>
                     <div className="col-span-3 p-12 overflow-auto scrollbar-hide scroll-smooth">
-                        {sentFiles && <SentFileTable/>}
+                        {sentFiles ? <SentFileTable/> : <AccessorFileTable/>}
                     </div>
                 </div>
             </motion.div>

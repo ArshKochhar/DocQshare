@@ -143,7 +143,7 @@ export default function AddFile() {
     } 
     return (
     <>
-        <div className="fixed">
+        <div className="">
             <button
             type="button"
             onClick={openModal}
