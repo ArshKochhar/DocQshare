@@ -5,12 +5,10 @@ import MetaMaskButton from "../../components/buttons/metaMaskButton";
 import Web3Token from "web3-token";
 import Web3 from "web3";
 import { Spinner } from "../../components/loading/spinner";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserName, User, setWalletId } from "../../redux/userSlice";
 declare var window: any
 
-export interface AccountObject {
-  userName: string | null;
-  walletId: string | null;
-}
 
 export interface MsgObject {
   message: string;
@@ -18,24 +16,16 @@ export interface MsgObject {
 }
 
 const Login  = () => {
-  var Logo = require('../../assets/logo.jpg');
+  const dispatch = useDispatch();
+  const userState: User = useSelector((state: any) => state.user);
+  const {walletId, userName} = userState;
 
   const [msg, setMsg] = useState<MsgObject | null>(null);
-
-  const [user, setUser] = useState<AccountObject>({
-    userName: null,
-    walletId: null,
-  });
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleUserNameChange = (e: any) => {
-    const { name, value } = e.target;
-    setUser({...user, [name]: value})
-  }
-
-  const handleWalletChange = (value: string) => {
-    setUser({...user, walletId: value})
+    dispatch(setUserName(e.target.value));
   }
 
   const changeMessage = (color: string, content: string) => {
@@ -47,10 +37,10 @@ const Login  = () => {
       await window.ethereum.request({method: 'eth_requestAccounts'});
       window.web3 = new Web3(window.ethereum);
       setIsLoading(true);
-      const token = await Web3Token.sign((msg: string) => window.web3.eth.personal.sign(msg, user.walletId), '1h');
+      const token = await Web3Token.sign((msg: string) => window.web3.eth.personal.sign(msg, walletId), '1h');
       axios.post("http://localhost:3500/auth/login", 
-        { userName: user.userName,
-          walletId: user.walletId,
+        { userName: userName,
+          walletId: walletId,
         }, {
           headers: {
             'Authorization': token,
@@ -61,6 +51,7 @@ const Login  = () => {
           // successful response message is displayed
           setIsLoading(false);
           changeMessage(response.data.color, response.data.message);
+          dispatch(setWalletId(walletId));
           setTimeout(window.location.replace("http://localhost:3000/account"), 100);
         }).catch((error: any) => {
           setIsLoading(false);
@@ -94,13 +85,11 @@ const Login  = () => {
               placeholder='Username...'
               onChange={handleUserNameChange} 
               name='userName' 
-              value={user.userName ?? ''}
+              value={userName ?? ''}
             />
           </div>
           <div className='w-full flex flex-col items-center pt-8 pl-2'>
-            <MetaMaskButton 
-              setWallet={handleWalletChange}
-              setMsg={changeMessage}
+            <MetaMaskButton setMsg={changeMessage}
             />
           </div>
           <div className='w-full flex flex-col items-center py-6'>
@@ -112,7 +101,7 @@ const Login  = () => {
           </div>
         </div>
           <div className='w-1/4 py-4 flex flex-col items-center bg-white rounded-md shadow-2xl'>
-            <p>Do not have an account? <a href="/signup" className="no-underline hover:underline text-blue-500 text-bold">Login</a></p>
+            <p>Do not have an account? <a href="/signup" className="no-underline hover:underline text-blue-500 text-bold">Sign Up</a></p>
           </div>
         <div>
         </div>

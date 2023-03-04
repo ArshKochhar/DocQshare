@@ -5,6 +5,8 @@ import MetaMaskButton from "../../components/buttons/metaMaskButton";
 import Web3Token from "web3-token";
 import Web3 from "web3";
 import { Spinner } from "../../components/loading/spinner";
+import { useDispatch, useSelector } from "react-redux";
+import { setUserName, User } from "src/redux/userSlice";
 declare var window: any
 
 export interface AccountObject {
@@ -20,22 +22,16 @@ export interface MsgObject {
 const Signup  = () => {
   var Logo = require('../../assets/logo.jpg');
 
-  const [msg, setMsg] = useState<MsgObject | null>(null);
+  const dispatch = useDispatch();
+  const userState: User = useSelector((state: any) => state.user);
+  const {walletId, userName} = userState;
 
-  const [user, setUser] = useState<AccountObject>({
-    userName: null,
-    walletId: null,
-  });
+  const [msg, setMsg] = useState<MsgObject | null>(null);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleUserNameChange = (e: any) => {
-    const { name, value } = e.target;
-    setUser({...user, [name]: value})
-  }
-
-  const handleWalletChange = (value: string) => {
-    setUser({...user, walletId: value})
+    dispatch(setUserName(e.target.value));
   }
 
   const changeMessage = (color: string, content: string) => {
@@ -47,10 +43,10 @@ const Signup  = () => {
       await window.ethereum.request({method: 'eth_requestAccounts'});
       window.web3 = new Web3(window.ethereum);
       setIsLoading(true);
-      const token = await Web3Token.sign((msg: string) => window.web3.eth.personal.sign(msg, user.walletId), '1h');
+      const token = await Web3Token.sign((msg: string) => window.web3.eth.personal.sign(msg, walletId), '1h');
       axios.post("http://localhost:3500/auth/signup", 
-        { userName: user.userName,
-          walletId: user.walletId,
+        { userName: userName,
+          walletId: walletId,
         }, {
           headers: {
             'Authorization': token,
@@ -95,12 +91,11 @@ const Signup  = () => {
               placeholder='Username...'
               onChange={handleUserNameChange} 
               name='userName' 
-              value={user.userName ?? ''}
+              value={userName ?? ''}
               />
           </div>
           <div className='w-full flex flex-col items-center pt-8 pl-2'>
             <MetaMaskButton 
-              setWallet={handleWalletChange}
               setMsg={changeMessage}
             />
           </div>

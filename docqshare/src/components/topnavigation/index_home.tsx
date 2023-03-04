@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom';
+import axios from "axios";
+import { useEffect, useState } from 'react';
 
 export interface navParams {
     howItWorks: string,
@@ -8,6 +10,36 @@ export interface navParams {
 
 const TopNavigationHome = ({howItWorks, aboutUs, landingPage}: navParams) => {
     var Banner = require('../../assets/DocuShareBanner.jpg');
+    const token = localStorage.getItem("authToken");
+
+    const [alreadyLoggedIn, setAlreadyLoggedIn] = useState<boolean>(false);
+
+    const handleLogin = async () => {
+        if (token) {
+            axios.post("http://localhost:3500/auth/verify", { }, 
+            {
+                headers: {
+                'Authorization': token,
+                }
+            }).then(() => {
+                setAlreadyLoggedIn(true);
+                return;
+            }).catch(() => {
+                localStorage.removeItem("authToken");
+                setAlreadyLoggedIn(false);
+                return;
+            });
+        } else {
+            setAlreadyLoggedIn(false);
+            return;
+        }
+    }
+
+    useEffect(() => {
+        handleLogin();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     return (
         <div className="w-full h-full">
             <div className="w-screen bg-white shadow-lg py-2">
@@ -40,13 +72,25 @@ const TopNavigationHome = ({howItWorks, aboutUs, landingPage}: navParams) => {
                             </button>
                         </div>
                         <div>            
-                        <button className="p-2 rounded-md">
-                                <Link to='/login' className=''>
-                                    <p className="text-center text-gray-600 hover:text-black hover:font-bold">
-                                        Login
-                                    </p>
-                                </Link>
-                            </button>
+                            {
+                            alreadyLoggedIn 
+                                ?
+                                    <div>
+                                        <Link to='/account'>
+                                            <p className="text-center text-gray-600 hover:text-black hover:font-bold">
+                                                Account
+                                            </p>
+                                        </Link>
+                                    </div>
+                                :
+                                    <button className="p-2 rounded-md">
+                                        <Link to='/login' className=''>
+                                            <p className="text-center text-gray-600 hover:text-black hover:font-bold">
+                                                Login
+                                            </p>
+                                        </Link>
+                                    </button>
+                            }
                         </div>
                         <div>            
                         <div className="p-2 rounded-md">

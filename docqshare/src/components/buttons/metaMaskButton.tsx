@@ -1,30 +1,30 @@
-import React from 'react'
+import { useDispatch } from 'react-redux';
+import { setWalletId } from 'src/redux/userSlice';
 import Web3 from 'web3';
 declare var window: any
 
 interface MetaMaskProps {
-    setWallet: (name: string) => void;
     setMsg: (color: string, content: string) => void
 }
 
 const MetaMaskButton = (props: MetaMaskProps): JSX.Element => {
-    const { setWallet, setMsg } = props
-
+    const dispatch = useDispatch();
+    
     const connectToWallet = async () => {
         if (window.ethereum) {
             await window.ethereum.request({method: 'eth_requestAccounts'});
             window.web3 = new Web3(window.ethereum);
             try {
                 const requestedAccounts = await window.web3.eth.requestAccounts();
-                setWallet(requestedAccounts[0]);
-                setMsg("bg-green-600", "Wallet Successfully Connected!")
+                dispatch(setWalletId(requestedAccounts[0]));
+                props.setMsg("bg-green-600", "Wallet Successfully Connected!")
             } catch (err) {
                 console.log(err);
-                setMsg("bg-red-600", "Wallet Connection Failed!");
+                props.setMsg("bg-red-600", "Wallet Connection Failed!");
             }
         }
         else {
-            setMsg("bg-red-600", "No Ethereum Wallet Present.");
+            props.setMsg("bg-red-600", "No Ethereum Wallet Present.");
         }
     }
 
