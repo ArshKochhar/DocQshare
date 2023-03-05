@@ -1,9 +1,10 @@
 import { motion } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
 import { FileObj, User, setWalletId, setListOfAccessedFiles } from 'src/redux/userSlice';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Web3 from 'web3';
+import { ClipLoader } from 'react-spinners';
 declare var window: any
 
 function AccessorFileTable() {
@@ -11,6 +12,8 @@ function AccessorFileTable() {
     const userState: User = useSelector((state: any) => state.user);
     const { accessedFiles } = userState;
     const token = localStorage.getItem("authToken");
+
+    const [loaded, setLoaded] = useState(false);
 
     const getSentFiles = async () => {
         await window.ethereum.request({method: 'eth_requestAccounts'});
@@ -26,6 +29,7 @@ function AccessorFileTable() {
             headers: { 'Authorization': token }
         }).then(async (response) => {
             const files = response.data.files.map((file: any) => {
+                setLoaded(true);
                 return { 
                     id: file.file_id, 
                     accessor: [],
@@ -62,30 +66,36 @@ function AccessorFileTable() {
                 </div>
             </div>
             <div className='w-full pt-[40px]'/>
-            <table className='inset-0 w-full table-fixed pb-10 overflow-hidden border-2 border-page-bg p-1'>
-                <tbody className='w-full'>
-                    {accessedFiles.map((file: FileObj) => {
-                        return (
-                            <tr key={file.id} className='w-full h-[360px] border-b-4 border-page-bg'>
-                                <td className='w-full h-[360px] text-black font-bold text-center text-xs grid grid-cols-2 gap-x-2'>
-                                    <div className='w-full h-full py-2'>
-                                        <iframe className='w-full h-full overflow-auto scroll-smooth scrollbar-hide border-2 border-black' src={file.payload} title={"current file"}/>
-                                    </div>
-                                    <div className='w-full h-full py-2'>
-                                        <div className='w-full h-1/2 flex items-center gap-y-2 px-2'>
-                                            <button className='w-full h-12 bg-queens-blue text-sm font-medium text-white hover:bg-blue-400 rounded-md'>
-                                                <a href={file.payload} title={"current file"} download={file.name}>{"DOWNLOAD: " + file.name}</a>
-                                            </button>
+            {loaded ?
+                <table className='inset-0 w-full table-fixed pb-10 overflow-hidden border-2 border-page-bg p-1'>
+                    <tbody className='w-full'>
+                        {accessedFiles.map((file: FileObj) => {
+                            return (
+                                <tr key={file.id} className='w-full h-[360px] border-b-4 border-page-bg'>
+                                    <td className='w-full h-[360px] text-black font-bold text-center text-xs grid grid-cols-3 gap-x-2'>
+                                        <div className='w-full h-full py-2 col-span-2 p-2'>
+                                            <iframe className='w-full h-full overflow-hidden scroll-smooth scrollbar-hide border-2 border-black object-fill' src={file.payload} title={"current file"}/>
                                         </div>
-                                        <p className='text-center text-xs font-bold w-full bg-green-500 text-white rounded-md'>{"Owner: " + file.owner}</p>
-                                    </div>
-                                </td>
-                            </tr>
-                        )
-                    })
-                    }
-                </tbody>
-            </table>
+                                        <div className='w-full h-full py-2 flex items-center'>
+                                            <div className='w-full'>
+                                                <button className='w-1/2 bg-queens-blue text-sm font-medium text-white hover:bg-blue-400 rounded-md'>
+                                                    <a href={file.payload} title={"current file"} download={file.name}>{"DOWNLOAD: " + file.name}</a>
+                                                </button>
+                                                <p className='pt-4 text-center text-xs font-bold w-full text-black underline rounded-md'>{"Owner: " + file.owner}</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            )
+                        })
+                        }
+                    </tbody>
+                </table> 
+            : 
+                <div className='flex flex-col items-center pt-40'>
+                    <ClipLoader color="#000000" size='300px' loading/>
+                </div>
+            }
         </div>
         </motion.div>
     )

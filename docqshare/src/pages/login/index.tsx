@@ -9,7 +9,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { setUserName, User, setWalletId } from "../../redux/userSlice";
 declare var window: any
 
-
 export interface MsgObject {
   message: string;
   color: string;

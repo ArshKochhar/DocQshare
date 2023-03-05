@@ -52,9 +52,9 @@ const TopNavigationHome = ({howItWorks, aboutUs, landingPage}: navParams) => {
                         </div>
                     </div>
                     <div></div>
-                    <div className="w-full h-full grid grid-flow-col-dense items-center">
+                    <div className="w-full h-full grid grid-cols-4 place-items-center">
                         <div>            
-                        <button className="p-2 rounded-md">
+                            <button className="p-2 rounded-md">
                                 <a href={howItWorks} className='scroll-smooth'>
                                     <p className="text-center text-gray-600 hover:text-black hover:font-bold">
                                         How it works
@@ -63,7 +63,7 @@ const TopNavigationHome = ({howItWorks, aboutUs, landingPage}: navParams) => {
                             </button>
                         </div>   
                         <div>            
-                        <button className="p-2 rounded-md">
+                            <button className="p-2 rounded-md">
                                 <a href={aboutUs} className='scroll-smooth'>
                                     <p className="text-center text-gray-600 hover:text-black hover:font-bold">
                                         About us

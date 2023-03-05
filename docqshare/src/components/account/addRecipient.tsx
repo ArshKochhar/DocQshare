@@ -18,7 +18,8 @@ function AddRecipient({file, getFiles}: {file: FileObj, getFiles: () => void }) 
     let [isOpen, setIsOpen] = useState(false);
 
     function closeModal() {
-        getFiles()
+        getFiles();
+        dispatch(setCurrentFileAccessorList([]));
         setIsOpen(false);
     }
 
@@ -135,7 +136,7 @@ function AddRecipient({file, getFiles}: {file: FileObj, getFiles: () => void }) 
                                     <div className='w-full h-full'>
                                         <div className='w-full h-full'>
                                             <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900 text-center">
-                                                ADD {currentFile.accessor.length} RECIPIENT(S)
+                                                ADD {currentFile.accessor.length} ACCESSOR(S)
                                             </Dialog.Title>
                                             <div className="w-full rounded-md flex flex-col items-center">
                                                 {msg && <p className={`${msg.color} text-center py-1 text-white rounded-md w-1/3`}>{msg.message}</p>}
