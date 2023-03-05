@@ -52,6 +52,7 @@ const Login  = () => {
           setIsLoading(false);
           changeMessage(response.data.color, response.data.message);
           dispatch(setWalletId(walletId));
+          dispatch(setUserName(userName));
           setTimeout(window.location.replace("http://localhost:3000/account"), 100);
         }).catch((error: any) => {
           setIsLoading(false);

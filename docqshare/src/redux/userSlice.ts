@@ -13,7 +13,8 @@ export interface User {
     id: string | null;
     walletId: string | null;
     userName: string | null;
-    files: FileObj[];
+    sentFiles: FileObj[];
+    accessedFiles: FileObj[];
     currentFile: FileObj;
 }
 
@@ -21,7 +22,8 @@ export const initialState: User = {
     id: null,
     walletId: null,
     userName: null,
-    files: [],
+    sentFiles: [],
+    accessedFiles: [],
     currentFile: {
         id: null,
         name: null,
@@ -40,7 +42,7 @@ export const UserSlice = createSlice({
             state.id = payload.id;
             state.userName = payload.userName;
             state.walletId = payload.walletId;
-            state.files = payload.files
+            state.sentFiles = payload.files
         },
         setUserName: (state, { payload }: {payload:any}) => {
             state.userName = payload;
@@ -49,10 +51,10 @@ export const UserSlice = createSlice({
             state.walletId = payload;
         },
         addFileToList: (state, { payload }: {payload:any}) => {
-            state.files = [...state.files, payload ];
+            state.sentFiles = [...state.sentFiles, payload ];
         },
         removeFile: (state, { payload }: {payload:any}) => {
-            state.files = state.files.filter((file) => file.id !== payload);
+            state.sentFiles = state.sentFiles.filter((file) => file.id !== payload);
         },
         setCurrentFile: (state, { payload }: {payload:any}) => {
             state.currentFile.id = payload.id;
@@ -72,10 +74,13 @@ export const UserSlice = createSlice({
             if (state.currentFile) state.currentFile.name = payload.name;
         },
         setListOfFiles: (state, { payload }: { payload: any }) => {
-            state.files = [...payload];
+            state.sentFiles = [...payload];
         },
+        setListOfAccessedFiles: (state, { payload }: { payload: any }) => { 
+            state.accessedFiles = [...payload];
+        }
     }
 })
 
 export default UserSlice.reducer;
-export const { setUser, setUserName, setWalletId, addFileToList, removeFile, setCurrentFile, setCurrentFileAccessorList, addCurrentFileAccessor, setListOfFiles} = UserSlice.actions;
+export const { setUser, setUserName, setWalletId, addFileToList, removeFile, setCurrentFile, setCurrentFileAccessorList, addCurrentFileAccessor, setListOfFiles, setListOfAccessedFiles} = UserSlice.actions;

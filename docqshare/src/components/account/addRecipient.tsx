@@ -104,7 +104,7 @@ function AddRecipient({file, getFiles}: {file: FileObj, getFiles: () => void }) 
     return (
         <>
             <div className='w-full'>
-                <button className="rounded-md py-2 w-full bg-queens-blue px-4 text-sm font-medium text-white hover:bg-blue-400" onClick={openModal}>Edit Accessor(s)</button>
+                <button className="rounded-md h-full w-full bg-queens-blue px-4 text-sm font-medium text-white hover:bg-blue-400" onClick={openModal}>Edit Accessor(s)</button>
             </div>
             <Transition appear show={isOpen} as={Fragment}>
                 <Dialog as="div" className="relative z-10" onClose={closeModal}>
