@@ -6,6 +6,9 @@ import AddRecipientButton from "../buttons/addRecipientButton";
 import { sha256 } from "crypto-hash";
 import { addFileToList, setCurrentFile, addCurrentFileAccessor, User, setCurrentFileAccessorList } from "src/redux/userSlice";
 import Web3 from "web3";
+import { ethers } from "ethers";
+import { stringify, toJSON } from "flatted";
+import abi from "../../contracts/abi.json";
 declare var window: any;
 
 export interface MsgObject {
@@ -28,6 +31,9 @@ export default function AddFile(props: AddFileProps) {
     const [nextPage, setNextPage] = useState<boolean>(true);
     const [currRecipient, setCurrRecipient] = useState<string | null>("");
     const [msg, setMsg] = useState<MsgObject | null>(null);
+
+    const contract_address = "0xCa0BcB19E3A9dE54Ef627df4C750e73155e285bA";
+    const contract_abi = abi;
 
     const token = localStorage.getItem("authToken");
     const changeMessage = (color: string, content: string) => {
@@ -110,32 +116,18 @@ export default function AddFile(props: AddFileProps) {
         }
     };
 
-    async function test() {
-        const requestData = { id: props.account };
-        const config = {
-            method: "get",
-            url: "http://localhost:3500/v1/addOwner",
-            headers: {},
-            data: requestData,
-        };
-
-        axios(config)
-            .then(function (response) {
-                console.log(JSON.stringify(response.data));
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    }
-
-    async function handleSubmit() {
-        await test();
-    }
-
-    // const handleSubmit = async () => {
-    //     // await addFile();
-    //     await test();
-    // };
+    const handleSubmit = async () => {
+        if (window.ethereum) {
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const signer = provider.getSigner();
+            const contract = new ethers.Contract(contract_address, contract_abi, signer);
+            let tx = await contract.addOwnership("url", 1);
+            console.log(tx, "Adding an owner to a document");
+            const ownerTxn = await tx.wait();
+            console.log("Finished Adding Ownership to the document, Transaction Hash is:", ownerTxn.transactionHash);
+        }
+        await addFile();
+    };
 
     const handleAddRecipient = async (): Promise<void> => {
         // check if wallet is of a valid DocQshare user
