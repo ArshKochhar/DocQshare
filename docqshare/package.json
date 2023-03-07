@@ -17,6 +17,7 @@
     "ethers": "^5.7.2",
     "flatted": "^3.2.7",
     "framer-motion": "^9.0.2",
+    "json-circular-stringify": "^1.0.1",
     "metamask": "^0.0.1-security",
     "react": "^18.2.0",
     "react-doc-viewer": "^0.1.5",
