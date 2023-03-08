@@ -7,7 +7,6 @@ import { sha256 } from "crypto-hash";
 import { addFileToList, setCurrentFile, addCurrentFileAccessor, User, setCurrentFileAccessorList } from "src/redux/userSlice";
 import Web3 from "web3";
 import { ethers } from "ethers";
-import { stringify, toJSON } from "flatted";
 import abi from "../../contracts/abi.json";
 declare var window: any;
 
@@ -77,13 +76,6 @@ export default function AddFile(props: AddFileProps) {
             };
         }
     };
-
-    // const addOwnerChainCall = async () => {
-    //     axios
-    //         .get("http://localhost:3500/v1/addOwner", { data: props.account })
-    //         .then((response) => console.log(JSON.stringify(response.data)))
-    //         .catch((error) => console.log(error));
-    // };
 
     const addFile = async () => {
         try {

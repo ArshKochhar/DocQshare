@@ -7,6 +7,7 @@ import AddRecipientButton from "../buttons/addRecipientButton";
 import abi from "../../contracts/abi.json";
 import { ethers } from "ethers";
 import Web3 from "web3";
+import { deployedContract } from "src/config";
 declare var window: any;
 
 export interface MsgObject {
@@ -18,7 +19,7 @@ function AddRecipient({ file, getFiles }: { file: FileObj; getFiles: () => void 
     const dispatch = useDispatch<any>();
     const userState: User = useSelector((state: any) => state.user);
     const { currentFile, walletId } = userState;
-    const contract_address = "0xCa0BcB19E3A9dE54Ef627df4C750e73155e285bA";
+    console.log(deployedContract, "ADDDYYYYY");
     const contract_abi = abi;
 
     let [isOpen, setIsOpen] = useState(false);
