@@ -15,6 +15,7 @@ function AccessorFileTable() {
 
     const [loaded, setLoaded] = useState(false);
 
+
     const getSentFiles = async () => {
         await window.ethereum.request({method: 'eth_requestAccounts'});
         window.web3 = new Web3(window.ethereum);
@@ -73,13 +74,14 @@ function AccessorFileTable() {
                             return (
                                 <tr key={file.id} className='w-full h-[360px] border-b-4 border-page-bg'>
                                     <td className='w-full h-[360px] text-black font-bold text-center text-xs grid grid-cols-3 gap-x-2'>
-                                        <div className='w-full h-full py-2 col-span-2 p-2'>
-                                            <iframe className='w-full h-full overflow-hidden scroll-smooth scrollbar-hide border-2 border-black object-fill' src={file.payload} title={"current file"}/>
+                                        <div className='w-full h-full col-span-2 p-2 overflow-auto scrollbar-hide'>
+                                            <p className='font-bold text-2xl'>{file.name}</p>
+                                            <iframe loading={"lazy"} className='w-full h-[300px] overflow-auto scroll-smooth scrollbar-hide border-2 border-black object-fill' src={file.payload} title={"current file"}/>
                                         </div>
                                         <div className='w-full h-full py-2 flex items-center'>
                                             <div className='w-full'>
                                                 <button className='w-1/2 bg-queens-blue text-sm font-medium text-white hover:bg-blue-400 rounded-md'>
-                                                    <a href={file.payload} title={"current file"} download={file.name}>{"DOWNLOAD: " + file.name}</a>
+                                                    <a href={file.payload} title={"current file"} download={file.name}>{"DOWNLOAD"}</a>
                                                 </button>
                                                 <p className='pt-4 text-center text-xs font-bold w-full text-black underline rounded-md'>{"Owner: " + file.owner}</p>
                                             </div>

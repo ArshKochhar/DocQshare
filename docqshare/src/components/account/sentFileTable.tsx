@@ -6,6 +6,7 @@ import axios from 'axios';
 import Web3 from 'web3';
 import AddRecipient from './addRecipient';
 import { ClipLoader } from 'react-spinners';
+import ConfirmDelete from './confirmDelete';
 declare var window: any
 
 function SentFileTable() {
@@ -26,7 +27,7 @@ function SentFileTable() {
             owner: requestedAccounts[0]
         }, 
         {
-            headers: { 'Authorization': token }
+            headers: { 'Authorization': token },
         }).then(async (response) => {
             const files = response.data.files.map((file: any) => {return { 
                 id: file.file_id, 
@@ -44,31 +45,6 @@ function SentFileTable() {
             return;
         });
     };
-
-    const deleteFile = async (fileId: string | null) => {
-        if (fileId) {
-            setLoaded(false);
-            await window.ethereum.request({method: 'eth_requestAccounts'});
-            window.web3 = new Web3(window.ethereum);
-            const requestedAccounts = await window.web3.eth.requestAccounts();
-            dispatch(setWalletId(requestedAccounts));
-            
-            axios.post("http://localhost:3500/file/deleteFile", 
-            { 
-                file_id: fileId
-            }, 
-            {
-                headers: { 'Authorization': token }
-            }).then(async (response) => {
-                console.log(response.data)
-                await getOwnedFiles()
-                return;
-            }).catch((err) => {
-                console.log(err)
-                return;
-            });
-        }
-    }
 
     useEffect(() => {
         getOwnedFiles();
@@ -103,7 +79,7 @@ function SentFileTable() {
                                                 <p className='font-bold text-2xl'>{file.name}</p>
                                             </div>
                                             <div className='overflow-auto scrollbar-hide border-2 border-black rounded-md bg-page-bg'>
-                                                <iframe className='w-full h-[300px] overflow-auto scroll-smooth scrollbar-hide' src={file.payload} title={"current file"}/>
+                                                <iframe loading={"lazy"} className='w-full h-[300px] overflow-auto scroll-smooth scrollbar-hide' src={file.payload} title={"current file"}/>
                                             </div>
                                         </div>
                                     </td>
@@ -128,7 +104,9 @@ function SentFileTable() {
                                                 <button className='w-1/2 rounded-md bg-queens-blue text-sm font-medium text-white hover:bg-blue-400'>
                                                     <a href={file.payload} title={"current file"} download={file.name}>{"Download"}</a>
                                                 </button>
-                                                <button className="rounded-md w-1/2 bg-red-600 text-sm font-medium text-white hover:bg-red-400" onClick={()=> deleteFile(file.id)}>Delete File</button>
+                                                <div className='w-1/2'>
+                                                    <ConfirmDelete fileId={file.id} fileName={file.name} setLoaded={setLoaded} getFiles={getOwnedFiles}/>
+                                                </div>
                                             </div>
                                         </div>
                                     </td>

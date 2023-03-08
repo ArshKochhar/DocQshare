@@ -43,15 +43,14 @@ const TopNavigationHome = ({howItWorks, aboutUs, landingPage}: navParams) => {
     return (
         <div className="w-full h-full">
             <div className="w-screen bg-white shadow-lg py-2">
-                <div className="w-full h-full grid grid-cols-3">
+                <div className="w-full h-full grid grid-cols-2">
                     <div className="w-full h-full">
                         <div className="h-full w-fit items-left text-center pl-4">
-                            <a href={landingPage} className='scroll-smooth'>
+                            <a href={landingPage} className='w-full h-full scroll-smooth flex items-center'>
                                 <img className='h-20 object-scale-down' src={Banner} alt={""} />
                             </a>
                         </div>
                     </div>
-                    <div></div>
                     <div className="w-full h-full grid grid-cols-4 place-items-center">
                         <div>            
                             <button className="p-2 rounded-md">
