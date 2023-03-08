@@ -12,9 +12,11 @@ interface sidebarProps {
     setSentFiles: any;
     recievedFiles: boolean;
     setRecievedFiles: any;
+    account: object;
 }
 
 const SideBar = (props: sidebarProps) => {
+
     const dispatch = useDispatch<any>();
     const userState: User = useSelector((state: any) => state.user);
     const { userName } = userState;
@@ -22,16 +24,17 @@ const SideBar = (props: sidebarProps) => {
     var Banner = require('../../assets/DocuShareBanner.jpg');
     
     const buttonColorHandle = ({ val } : { val: string }) => {
+
         switch (val) {
-            case 'sentFiles':
+            case "sentFiles":
                 props.setSentFiles(true);
                 props.setRecievedFiles(false);
                 break;
-            case 'recievedFiles':
+            case "recievedFiles":
                 props.setSentFiles(false);
                 props.setRecievedFiles(true);
                 break;
-            case 'accountSettings':
+            case "accountSettings":
                 props.setSentFiles(false);
                 props.setRecievedFiles(false);
                 break;
@@ -40,7 +43,7 @@ const SideBar = (props: sidebarProps) => {
                 props.setRecievedFiles(false);
                 break;
         }
-    }
+    };
 
     const getUserName = async () => {
         await window.ethereum.request({method: 'eth_requestAccounts'});
@@ -76,23 +79,26 @@ const SideBar = (props: sidebarProps) => {
                 </div>
                 <p className="text-black text-center shrink font-bold">{userName}</p>
                 <div className="w-full h-fit p-4 grid grid-rows-3 gap-y-2 place-items-start">
-                    <button className={`flex h-full w-full ${props.sentFiles ?'bg-blue-400':'bg-queens-blue'} rounded-lg p-2 hover:bg-blue-400 text-white my-auto`} onClick={() => buttonColorHandle({ val: 'sentFiles' })}>
-                        <div className="flex my-auto p-1 scale-down"><TfiViewListAlt size={15}/></div>
+                    <button className={`flex h-full w-full ${props.sentFiles ? "bg-blue-400" : "bg-queens-blue"} rounded-lg p-2 hover:bg-blue-400 text-white my-auto`} onClick={() => buttonColorHandle({ val: "sentFiles" })}>
+                        <div className="flex my-auto p-1 scale-down">
+                            <TfiViewListAlt size={15} />
+                        </div>
                         Your Files
                     </button>
+
                     <button className={`flex h-full w-full ${props.recievedFiles ?'bg-blue-400':'bg-queens-blue'} rounded-lg p-2  hover:bg-blue-400 text-white my-auto`} onClick={() => buttonColorHandle({ val: 'recievedFiles' })}>
                         <div className="flex my-auto p-1 scale-down"><TfiViewListAlt size={15}/></div>
                         Shared Files
                     </button>
                 </div>
-                {props.sentFiles && 
-                    <div className='w-full absolute bottom-10 flex justify-center'>
-                            <AddFile/>
+                {props.sentFiles && (
+                    <div className="w-full absolute bottom-10 flex justify-center">
+                        <AddFile account={props.account} />
                     </div>
-                }
+                )}
             </div>
         </div>
-    ) 
-}
+    );
+};
 
-export default SideBar
+export default SideBar;
