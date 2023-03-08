@@ -37,8 +37,6 @@ const Login = () => {
         if (window.ethereum) {
             await window.ethereum.request({ method: "eth_requestAccounts" });
             window.web3 = new Web3(window.ethereum);
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            localStorage.setItem("provider", stringify(provider));
             setIsLoading(true);
             const token = await Web3Token.sign((msg: string) => window.web3.eth.personal.sign(msg, walletId), "1h");
             axios

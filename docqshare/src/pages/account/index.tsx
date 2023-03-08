@@ -20,15 +20,6 @@ function AccountPage() {
         setTimeout(window.location.replace("http://localhost:3000/login"), 100);
     };
 
-    useEffect(() => {
-        // Update the document title using the browser API
-        const info = parse(localStorage.getItem("provider") || "{}");
-        setAccountInfo(info);
-        localStorage.removeItem("provider");
-    }, []);
-
-    console.log(accountInfo, "how is this");
-
     return (
         <Authentication>
             <motion.div className="w-screen h-screen bg-page-bg" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
