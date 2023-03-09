@@ -30,7 +30,6 @@ function AccessorFileTable() {
             headers: { 'Authorization': token }
         }).then(async (response) => {
             const files = response.data.files.map((file: any) => {
-                setLoaded(true);
                 return { 
                     id: file.file_id, 
                     accessor: [],
@@ -40,7 +39,8 @@ function AccessorFileTable() {
                     hash: file.Hash
                 }
             });
-            dispatch(setListOfAccessedFiles([...files]))
+            dispatch(setListOfAccessedFiles([...files]));
+            setLoaded(true);
             return;
         }).catch((err) => {
             console.log(err)

@@ -7,6 +7,7 @@ import Web3 from 'web3';
 import AddRecipient from './addRecipient';
 import { ClipLoader } from 'react-spinners';
 import ConfirmDelete from './confirmDelete';
+import TransferOwnership from './transferOwnership';
 declare var window: any
 
 function SentFileTable() {
@@ -98,7 +99,7 @@ function SentFileTable() {
                                             <p className='text-center text-xs w-full font-bold underline rounded-md'>{"Owner: " + file.owner}</p>
                                             <div className='w-full h-full flex flex-row gap-x-2 pt-4'>
                                                 <AddRecipient file={file}  getFiles={getOwnedFiles} />
-                                                <button className="rounded-md h-full w-full bg-queens-blue text-sm font-medium text-white hover:bg-blue-400 ">Transfer Ownership</button>
+                                                <TransferOwnership fileId={file.id} setLoaded={setLoaded} getFiles={getOwnedFiles}/>
                                             </div>
                                             <div className='w-full h-full flex flex-row gap-x-2 pt-4'>
                                                 <button className='w-1/2 rounded-md bg-queens-blue text-sm font-medium text-white hover:bg-blue-400'>
