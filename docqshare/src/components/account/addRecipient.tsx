@@ -18,7 +18,8 @@ function AddRecipient({file, getFiles}: {file: FileObj, getFiles: () => void }) 
     let [isOpen, setIsOpen] = useState(false);
 
     function closeModal() {
-        getFiles()
+        getFiles();
+        dispatch(setCurrentFileAccessorList([]));
         setIsOpen(false);
     }
 
@@ -104,7 +105,7 @@ function AddRecipient({file, getFiles}: {file: FileObj, getFiles: () => void }) 
     return (
         <>
             <div className='w-full'>
-                <button className="rounded-md py-2 w-full bg-queens-blue px-4 text-sm font-medium text-white hover:bg-blue-400" onClick={openModal}>Edit Accessor(s)</button>
+                <button className="rounded-md h-full w-full bg-queens-blue px-4 text-sm font-medium text-white hover:bg-blue-400" onClick={openModal}>Edit Accessor(s)</button>
             </div>
             <Transition appear show={isOpen} as={Fragment}>
                 <Dialog as="div" className="relative z-10" onClose={closeModal}>
@@ -135,7 +136,7 @@ function AddRecipient({file, getFiles}: {file: FileObj, getFiles: () => void }) 
                                     <div className='w-full h-full'>
                                         <div className='w-full h-full'>
                                             <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900 text-center">
-                                                ADD {currentFile.accessor.length} RECIPIENT(S)
+                                                ADD {currentFile.accessor.length} ACCESSOR(S)
                                             </Dialog.Title>
                                             <div className="w-full rounded-md flex flex-col items-center">
                                                 {msg && <p className={`${msg.color} text-center py-1 text-white rounded-md w-1/3`}>{msg.message}</p>}
