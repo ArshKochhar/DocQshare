@@ -8,6 +8,7 @@ import abi from "../../contracts/abi.json";
 import { ethers } from "ethers";
 import Web3 from "web3";
 import { deployedContract } from "src/config";
+import { type } from "@testing-library/user-event/dist/type";
 declare var window: any;
 
 export interface MsgObject {
@@ -19,7 +20,6 @@ function AddRecipient({ file, getFiles }: { file: FileObj; getFiles: () => void 
     const dispatch = useDispatch<any>();
     const userState: User = useSelector((state: any) => state.user);
     const { currentFile, walletId } = userState;
-    console.log(deployedContract, "ADDDYYYYY");
     const contract_abi = abi;
 
     let [isOpen, setIsOpen] = useState(false);
@@ -52,6 +52,13 @@ function AddRecipient({ file, getFiles }: { file: FileObj; getFiles: () => void 
             }, 500);
             setCurrRecipient("");
         } else if (currRecipient && !currentFile.accessor.includes(currRecipient)) {
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const signer = provider.getSigner();
+            const contract = new ethers.Contract(deployedContract, contract_abi, signer);
+            let tx = await contract.addAccess(currRecipient, "url", 1);
+            console.log(tx, "Adding an Access to a document");
+            const accessTxn = await tx.wait();
+            console.log("Finished Adding Access to the document, Transaction Hash is:", accessTxn.transactionHash);
             axios
                 .post(
                     "http://localhost:3500/auth/checkWallet",
@@ -77,6 +84,7 @@ function AddRecipient({ file, getFiles }: { file: FileObj; getFiles: () => void 
                     }, 500);
                 });
         } else {
+            console.log("PADKNSIUB");
             changeMessage("bg-red-600", "Recipient Already Added.");
             setTimeout(() => {
                 setMsg(null);
@@ -84,48 +92,46 @@ function AddRecipient({ file, getFiles }: { file: FileObj; getFiles: () => void 
         }
     };
 
-    const handleRemoveRecipient = (recipient: string) => {
+    async function handleRemoveRecipient(recipient: string) {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(deployedContract, contract_abi, signer);
+        let tx = await contract.removeAccess(recipient, "url", 1);
+        console.log(tx, "Adding an Access to a document");
+        const removeAccessTx = await tx.wait();
+        console.log("Finished Removing Access to the document, Transaction Hash is:", removeAccessTx.transactionHash);
         dispatch(setCurrentFileAccessorList([...currentFile.accessor.filter((r: string) => r !== recipient)]));
         changeMessage("bg-green-600", "Succesfully Removed");
         setTimeout(() => {
             setMsg(null);
         }, 1000);
-    };
+    }
 
     const handleSubmit = async () => {
-        console.log(currentFile.accessor, "WAAAA");
-        // const provider = new ethers.providers.Web3Provider(window.ethereum);
-        // const signer = provider.getSigner();
-        // const contract = new ethers.Contract(contract_address, contract_abi, signer);
-        // let tx = await contract.addAccess(walletId, "url", 1);
-        // console.log(tx, "Adding an Access to a document");
-        // const accessTxn = await tx.wait();
-        // console.log("Finished Adding Access to the document, Transaction Hash is:", accessTxn.transactionHash);
-        // try {
-
-        //     axios
-        //         .post(
-        //             "http://localhost:3500/file/updateAccessors",
-        //             { file_id: currentFile.id, accessors: currentFile.accessor },
-        //             {
-        //                 headers: {
-        //                     Authorization: token,
-        //                 },
-        //             }
-        //         )
-        //         .then((response: any) => {
-        //             changeMessage(response.data.color, response.data.message);
-        //             dispatch(setCurrentFileAccessorList([...response.data.accessor.map((accessor: { file_id: string; wallet_id: string }) => accessor.wallet_id)]));
-        //             setTimeout(() => {
-        //                 setMsg(null);
-        //             }, 1000);
-        //         })
-        //         .catch((error: any) => {
-        //             console.log(error);
-        //         });
-        // } catch (err) {
-        //     console.log(err);
-        // }
+        try {
+            axios
+                .post(
+                    "http://localhost:3500/file/updateAccessors",
+                    { file_id: currentFile.id, accessors: currentFile.accessor },
+                    {
+                        headers: {
+                            Authorization: token,
+                        },
+                    }
+                )
+                .then((response: any) => {
+                    changeMessage(response.data.color, response.data.message);
+                    dispatch(setCurrentFileAccessorList([...response.data.accessor.map((accessor: { file_id: string; wallet_id: string }) => accessor.wallet_id)]));
+                    setTimeout(() => {
+                        setMsg(null);
+                    }, 1000);
+                })
+                .catch((error: any) => {
+                    console.log(error);
+                });
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     return (

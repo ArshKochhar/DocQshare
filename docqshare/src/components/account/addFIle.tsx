@@ -7,6 +7,7 @@ import { sha256 } from "crypto-hash";
 import { addFileToList, setCurrentFile, addCurrentFileAccessor, User, setCurrentFileAccessorList } from "src/redux/userSlice";
 import Web3 from "web3";
 import { ethers } from "ethers";
+import { deployedContract } from "src/config";
 import abi from "../../contracts/abi.json";
 declare var window: any;
 
@@ -30,8 +31,6 @@ export default function AddFile(props: AddFileProps) {
     const [nextPage, setNextPage] = useState<boolean>(true);
     const [currRecipient, setCurrRecipient] = useState<string | null>("");
     const [msg, setMsg] = useState<MsgObject | null>(null);
-
-    const contract_address = "0xCa0BcB19E3A9dE54Ef627df4C750e73155e285bA";
     const contract_abi = abi;
 
     const token = localStorage.getItem("authToken");
@@ -112,7 +111,7 @@ export default function AddFile(props: AddFileProps) {
         if (window.ethereum) {
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
-            const contract = new ethers.Contract(contract_address, contract_abi, signer);
+            const contract = new ethers.Contract(deployedContract, contract_abi, signer);
             let tx = await contract.addOwnership("url", 1);
             console.log(tx, "Adding an owner to a document");
             const ownerTxn = await tx.wait();
@@ -130,6 +129,15 @@ export default function AddFile(props: AddFileProps) {
             }, 500);
             setCurrRecipient("");
         } else if (currRecipient && !currentFile.accessor.includes(currRecipient)) {
+            // Chain Call to add access
+            // const provider = new ethers.providers.Web3Provider(window.ethereum);
+            // const signer = provider.getSigner();
+            // const contract = new ethers.Contract(deployedContract, contract_abi, signer);
+            // let tx = await contract.addAccess(currRecipient, "url", 1);
+            // console.log(contract, "ARE WE HERE");
+            // console.log(tx, "Adding an Access to a document");
+            // const accessTxn = await tx.wait();
+            // console.log("Finished Adding Access to the document, Transaction Hash is:", accessTxn.transactionHash);
             axios
                 .post(
                     "http://localhost:3500/auth/checkWallet",
@@ -162,13 +170,21 @@ export default function AddFile(props: AddFileProps) {
         }
     };
 
-    const handleRemoveRecipient = (recipient: string) => {
+    async function handleRemoveRecipient(recipient: string) {
+        // const provider = new ethers.providers.Web3Provider(window.ethereum);
+        // const signer = provider.getSigner();
+        // const contract = new ethers.Contract(deployedContract, contract_abi, signer);
+        // let tx = await contract.removeAccess(recipient, "url", 1);
+        // console.log(tx, "Adding an Access to a document");
+        // const removeAccessTx = await tx.wait();
+        // console.log("Finished Removing Access to the document, Transaction Hash is:", removeAccessTx.transactionHash);
         dispatch(setCurrentFileAccessorList([...currentFile.accessor.filter((r: string) => r !== recipient)]));
         changeMessage("bg-green-600", "Succesfully Removed.");
         setTimeout(() => {
             setMsg(null);
         }, 1000);
-    };
+    }
+
     return (
         <>
             <div className="">

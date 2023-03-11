@@ -1,5 +1,5 @@
 // Ganache
-var deployedContract = "0x9f11c788F06DBFB8f7f4401BDB2cb0ff156B7976";
+var deployedContract = "0xcfab6d38612996c076D492822e341750f25b1CE2";
 
 module.exports = {
     deployedContract: deployedContract,
