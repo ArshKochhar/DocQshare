@@ -31,7 +31,7 @@ function AccountPage() {
                         <button className=' rounded-lg p-2 text-black hover:font-bold' onClick={logOut}>
                             <Link to='/signup' >
                                 <div className="flex flex-col items-center">
-                                <div className="flex my-auto">
+                                    <div className="flex my-auto">
                                         <MdOutlineLogout size={20} className="pt-1"/>Logout
                                     </div>
                                 </div>
