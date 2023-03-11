@@ -28,7 +28,6 @@ export default function AddFile(props: AddFileProps) {
     const accountInfo = props.account;
     let [isOpen, setIsOpen] = useState(false);
     const [fileSnapshot, setFileSnapshot] = useState<any>(null);
-    const [nextPage, setNextPage] = useState<boolean>(true);
     const [currRecipient, setCurrRecipient] = useState<string | null>("");
     const [msg, setMsg] = useState<MsgObject | null>(null);
     const contract_abi = abi;
@@ -42,7 +41,6 @@ export default function AddFile(props: AddFileProps) {
         setIsOpen(false);
         setFileSnapshot(null);
         setCurrRecipient(null);
-        setNextPage(true);
         dispatch(setCurrentFile({ id: null, owner: null, accessor: [], payload: null, name: null, hash: null }));
     }
 
@@ -198,7 +196,6 @@ export default function AddFile(props: AddFileProps) {
                     <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="ease-in duration-200" leaveFrom="opacity-100" leaveTo="opacity-0">
                         <div className="fixed inset-0 bg-black bg-opacity-25" />
                     </Transition.Child>
-                    {nextPage ? (
                         <div className="fixed inset-0 overflow-y-auto">
                             <div className={`flex ${fileSnapshot ? "h-full w-full" : "min-h-full"} items-center justify-center p-4 text-center`}>
                                 <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100" leave="ease-in duration-200" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95">
@@ -221,73 +218,15 @@ export default function AddFile(props: AddFileProps) {
                                                     {fileSnapshot && (
                                                         <div className="w-full flex flex-col items-center pt-4">
                                                             <button
-                                                                className="rounded-md py-2 w-1/4 h-full bg-queens-blue px-4 text-sm font-medium text-white hover:bg-blue-400 "
-                                                                onClick={() => {
-                                                                    setNextPage(false);
-                                                                }}
-                                                            >
-                                                                Next
-                                                            </button>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </Dialog.Panel>
-                                </Transition.Child>
-                            </div>
-                        </div>
-                    ) : (
-                        <div className="fixed inset-0 overflow-y-auto">
-                            <div className={`flex min-h-full w-full items-center justify-center p-4 text-center`}>
-                                <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100" leave="ease-in duration-200" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95">
-                                    <Dialog.Panel className="w-1/2 h-full transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                                        <div className="w-full h-full">
-                                            <div className="w-full h-full">
-                                                <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900 text-center">
-                                                    ADD {currentFile.accessor.length} RECIPIENT(S)
-                                                </Dialog.Title>
-                                                <div className="w-full rounded-md flex flex-col items-center">{msg && <p className={`${msg.color} text-center py-1 text-white rounded-md w-1/3`}>{msg.message}</p>}</div>
-                                                <div className="w-full flex flex-col items-center">
-                                                    <AddRecipientButton currentRecipient={currRecipient ?? ""} setCurrentRecipient={setCurrRecipient} handleAddRecipient={handleAddRecipient} />
-                                                    {currentFile.accessor.length !== 0 && (
-                                                        <div className="w-3/4 h-40 overflow-hidden border-2 border-page-bg rounded-md">
-                                                            <div className="text-center py-2 text-white overflow-y-scroll w-full h-full scrollbar-hide scroll-smooth p-1">
-                                                                {currentFile.accessor.map((recipient) => {
-                                                                    return (
-                                                                        <div className="grid grid-cols-12 gap-x-2 pb-1" key={recipient}>
-                                                                            <button className="text-white bg-red-300 hover:bg-red-600 col-span-1 rounded-full" onClick={() => handleRemoveRecipient(recipient)}>
-                                                                                X
-                                                                            </button>
-                                                                            <p className="text-black col-span-9">{recipient}</p>
-                                                                        </div>
-                                                                    );
-                                                                })}
-                                                            </div>
-                                                        </div>
-                                                    )}
-                                                    <div className="w-1/2 pt-4">
-                                                        <div className={`pt-4 ${currentFile.accessor.length !== 0 ? "grid grid-cols-2 gap-x-4" : "w-full"}`}>
-                                                            <button
-                                                                className="rounded-md py-2 w-full h-full bg-queens-blue px-4 text-sm font-medium text-white hover:bg-blue-400 "
-                                                                onClick={() => {
-                                                                    setNextPage(true);
-                                                                }}
-                                                            >
-                                                                Back
-                                                            </button>
-                                                            {currentFile.accessor.length !== 0 && (
-                                                                <button
-                                                                    className="rounded-md py-2 w-full h-full bg-queens-blue px-4 text-sm font-medium text-white hover:bg-blue-400 "
+                                                                    className="rounded-md py-2 w-1/2 h-full bg-queens-blue px-4 text-sm font-medium text-white hover:bg-blue-400 "
                                                                     onClick={() => {
                                                                         handleSubmit();
                                                                     }}
                                                                 >
                                                                     Submit
                                                                 </button>
-                                                            )}
                                                         </div>
-                                                    </div>
+                                                    )}
                                                 </div>
                                             </div>
                                         </div>
@@ -295,7 +234,6 @@ export default function AddFile(props: AddFileProps) {
                                 </Transition.Child>
                             </div>
                         </div>
-                    )}
                 </Dialog>
             </Transition>
         </>
