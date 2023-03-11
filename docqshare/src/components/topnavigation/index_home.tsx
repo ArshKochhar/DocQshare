@@ -8,6 +8,8 @@ export interface navParams {
     landingPage: string,
 }
 
+declare var window: any
+
 const TopNavigationHome = ({howItWorks, aboutUs, landingPage}: navParams) => {
     var Banner = require('../../assets/DocuShareBanner.jpg');
     const token = localStorage.getItem("authToken");
@@ -25,7 +27,7 @@ const TopNavigationHome = ({howItWorks, aboutUs, landingPage}: navParams) => {
                 setAlreadyLoggedIn(true);
                 return;
             }).catch(() => {
-                localStorage.removeItem("authToken");
+                // localStorage.removeItem("authToken");
                 setAlreadyLoggedIn(false);
                 return;
             });
@@ -33,6 +35,11 @@ const TopNavigationHome = ({howItWorks, aboutUs, landingPage}: navParams) => {
             setAlreadyLoggedIn(false);
             return;
         }
+    }
+
+    const logOut = () => {
+        localStorage.removeItem('authToken');
+        setTimeout(window.location.replace("http://localhost:3000/login"), 100);
     }
 
     useEffect(() => {
@@ -91,17 +98,27 @@ const TopNavigationHome = ({howItWorks, aboutUs, landingPage}: navParams) => {
                                     </button>
                             }
                         </div>
-                        <div>            
-                        <div className="p-2 rounded-md">
-                                <button className=' bg-queens-blue rounded-lg p-2 hover:bg-blue-400'>
-                                    <Link to='/signup' >
-                                        <p className="text-center text-white ">
-                                            Get started today
-                                        </p>
-                                    </Link>
-                                </button>
-                            </div>
-                        </div>
+                        <div>
+                        {
+                            alreadyLoggedIn 
+                                ?
+                                    <div>
+                                        <button className="hover:text-black hover:font-bold" onClick={logOut}>
+                                            logout
+                                        </button>
+                                    </div>
+                                :
+                                <div className="p-2 rounded-md">
+                                    <button className=' bg-queens-blue rounded-lg p-2 hover:bg-blue-400'>
+                                        <Link to='/signup' >
+                                            <p className="text-center text-white ">
+                                                Get started today
+                                            </p>
+                                        </Link>
+                                    </button>
+                                </div>
+                            }  
+                        </div>          
                     </div>
                 </div>
             </div>

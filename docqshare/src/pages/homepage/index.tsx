@@ -101,7 +101,7 @@ const Home = () => {
               img={arsh}
               name={'Arsh Kocchar'}
               role={'Blockchain Developer'}
-              description={'Developed the smart-contract endpoints and test-suite via the Ganache test-net environment. Lead the integration of the smart-contracts with the web application.'}
+              description={'Lead developer of the smart-contract integration and test-suite via the Ganache test-net environment.'}
               />
           </motion.button>
           <motion.button
