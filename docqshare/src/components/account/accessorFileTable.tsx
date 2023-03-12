@@ -5,6 +5,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Web3 from "web3";
 import { ClipLoader } from "react-spinners";
+import { ethers } from "ethers";
+import { deployedContract } from "src/config";
+import abi from "../../contracts/abi.json";
 declare var window: any;
 
 function AccessorFileTable() {
@@ -12,7 +15,7 @@ function AccessorFileTable() {
     const userState: User = useSelector((state: any) => state.user);
     const { accessedFiles } = userState;
     const token = localStorage.getItem("authToken");
-
+    const contract_abi = abi;
     const [loaded, setLoaded] = useState(false);
 
     const getSentFiles = async () => {
@@ -42,7 +45,15 @@ function AccessorFileTable() {
                         hash: file.Hash,
                     };
                 });
-                dispatch(setListOfAccessedFiles([...files]));
+
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+                const contract = new ethers.Contract(deployedContract, contract_abi, signer);
+                // eslint-disable-next-line array-callback-return
+                const integrityCheck = await Promise.all(files.map(async (file: FileObj) => await contract.checkAccess(file.hash)));
+                const checkedFiles = files.filter((data: FileObj, index: number) => integrityCheck[index]);
+                console.log(checkedFiles);
+                dispatch(setListOfAccessedFiles([...checkedFiles]));
                 return;
             })
             .catch((err) => {

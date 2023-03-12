@@ -55,7 +55,7 @@ function AddRecipient({ file, getFiles }: { file: FileObj; getFiles: () => void 
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
             const contract = new ethers.Contract(deployedContract, contract_abi, signer);
-            let tx = await contract.addAccess(currRecipient, "url", 1);
+            let tx = await contract.addAccess(currRecipient, file.hash, 1);
             console.log(tx, "Adding an Access to a document");
             const accessTxn = await tx.wait();
             console.log("Finished Adding Access to the document, Transaction Hash is:", accessTxn.transactionHash);
@@ -96,8 +96,8 @@ function AddRecipient({ file, getFiles }: { file: FileObj; getFiles: () => void 
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const contract = new ethers.Contract(deployedContract, contract_abi, signer);
-        let tx = await contract.removeAccess(recipient, "url", 1);
-        console.log(tx, "Adding an Access to a document");
+        let tx = await contract.removeAccess(recipient, file.hash, 1);
+        console.log(tx, "Removing Access to a document");
         const removeAccessTx = await tx.wait();
         console.log("Finished Removing Access to the document, Transaction Hash is:", removeAccessTx.transactionHash);
         dispatch(setCurrentFileAccessorList([...currentFile.accessor.filter((r: string) => r !== recipient)]));
@@ -136,8 +136,10 @@ function AddRecipient({ file, getFiles }: { file: FileObj; getFiles: () => void 
 
     return (
         <>
-            <div className='w-full'>
-                <button className="rounded-md h-full w-full bg-queens-blue px-4 text-sm font-medium text-white hover:bg-blue-400" onClick={openModal}>Edit Accessor(s)</button>
+            <div className="w-full">
+                <button className="rounded-md h-full w-full bg-queens-blue px-4 text-sm font-medium text-white hover:bg-blue-400" onClick={openModal}>
+                    Edit Accessor(s)
+                </button>
             </div>
             <Transition appear show={isOpen} as={Fragment}>
                 <Dialog as="div" className="relative z-10" onClose={closeModal}>
