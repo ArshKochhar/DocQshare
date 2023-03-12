@@ -104,7 +104,7 @@ function SentFileTable() {
                                                 <p className="text-center text-xs w-full font-bold underline rounded-md">{"Owner: " + file.owner}</p>
                                                 <div className="w-full h-full flex flex-row gap-x-2 pt-4">
                                                     <AddRecipient file={file} getFiles={getOwnedFiles} />
-                                                    <TransferOwnership fileId={file.id} setLoaded={setLoaded} getFiles={getOwnedFiles} />
+                                                    <TransferOwnership file={file} setLoaded={setLoaded} getFiles={getOwnedFiles} />
                                                 </div>
                                                 <div className="w-full h-full flex flex-row gap-x-2 pt-4">
                                                     <button className="w-1/2 rounded-md bg-queens-blue text-sm font-medium text-white hover:bg-blue-400">
