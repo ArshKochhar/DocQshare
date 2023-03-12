@@ -82,7 +82,6 @@ export default function AddFile(props: AddFileProps) {
                     {
                         hash: currentFile?.hash,
                         owner: currentFile?.owner,
-                        accessor: currentFile?.accessor,
                         payload: currentFile?.payload,
                         name: currentFile?.name,
                     },
@@ -116,56 +115,6 @@ export default function AddFile(props: AddFileProps) {
             console.log("Finished Adding Ownership to the document, Transaction Hash is:", ownerTxn.transactionHash);
         }
         await addFile();
-    };
-
-    const handleAddRecipient = async (): Promise<void> => {
-        // check if wallet is of a valid DocQshare user
-        if (walletId && currRecipient === walletId[0]) {
-            changeMessage("bg-red-600", "Cannot Add Yourself.");
-            setTimeout(() => {
-                setMsg(null);
-            }, 500);
-            setCurrRecipient("");
-        } else if (currRecipient && !currentFile.accessor.includes(currRecipient)) {
-            // Chain Call to add access
-            // const provider = new ethers.providers.Web3Provider(window.ethereum);
-            // const signer = provider.getSigner();
-            // const contract = new ethers.Contract(deployedContract, contract_abi, signer);
-            // let tx = await contract.addAccess(currRecipient, "url", 1);
-            // console.log(contract, "ARE WE HERE");
-            // console.log(tx, "Adding an Access to a document");
-            // const accessTxn = await tx.wait();
-            // console.log("Finished Adding Access to the document, Transaction Hash is:", accessTxn.transactionHash);
-            axios
-                .post(
-                    "http://localhost:3500/auth/checkWallet",
-                    { walletId: currRecipient },
-                    {
-                        headers: {
-                            Authorization: token,
-                        },
-                    }
-                )
-                .then((response: any) => {
-                    changeMessage(response.data.color, response.data.message);
-                    dispatch(addCurrentFileAccessor(currRecipient));
-                    setCurrRecipient("");
-                    setTimeout(() => {
-                        setMsg(null);
-                    }, 500);
-                })
-                .catch((error: any) => {
-                    changeMessage(error.response.data.color, error.response.data.message);
-                    setTimeout(() => {
-                        setMsg(null);
-                    }, 500);
-                });
-        } else {
-            changeMessage("bg-red-600", "Recipient Already Added.");
-            setTimeout(() => {
-                setMsg(null);
-            }, 500);
-        }
     };
 
     async function handleRemoveRecipient(recipient: string) {
