@@ -6,9 +6,7 @@ import { addCurrentFileAccessor, FileObj, setCurrentFile, setCurrentFileAccessor
 import AddRecipientButton from "../buttons/addRecipientButton";
 import abi from "../../contracts/abi.json";
 import { ethers } from "ethers";
-import Web3 from "web3";
 import { deployedContract } from "src/config";
-import { type } from "@testing-library/user-event/dist/type";
 declare var window: any;
 
 export interface MsgObject {

@@ -113,7 +113,7 @@ function SentFileTable() {
                                                         </a>
                                                     </button>
                                                     <div className="w-1/2">
-                                                        <ConfirmDelete fileId={file.id} fileName={file.name} setLoaded={setLoaded} getFiles={getOwnedFiles} />
+                                                        <ConfirmDelete fileId={file.id} fileOwner={file.owner} fileName={file.name} setLoaded={setLoaded} getFiles={getOwnedFiles} />
                                                     </div>
                                                 </div>
                                             </div>

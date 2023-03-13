@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { MdOutlineLogout } from "react-icons/md";
 import { Link } from "react-router-dom";
 import SentFileTable from "../../components/account/sentFileTable";
@@ -6,14 +6,12 @@ import SideBar from "../../components/account/sidebar";
 import Authentication from "../../components/authentication";
 import { motion } from "framer-motion";
 import AccessorFileTable from "src/components/account/accessorFileTable";
-import { parse, stringify, toJSON, fromJSON } from "flatted";
 
 declare var window: any;
 
 function AccountPage() {
     const [sentFiles, setSendFiles] = useState(true);
     const [recievedFiles, setRecievedFiles] = useState(false);
-    const [accountInfo, setAccountInfo] = useState({});
 
     const logOut = () => {
         localStorage.removeItem("authToken");
@@ -38,7 +36,7 @@ function AccountPage() {
                 </div>
                 <div className="w-full h-full grid grid-flow-row-dense grid-cols-4">
                     <div className="col-span-1">
-                        <SideBar sentFiles={sentFiles} setSentFiles={setSendFiles} recievedFiles={recievedFiles} setRecievedFiles={setRecievedFiles} account={accountInfo}></SideBar>
+                        <SideBar sentFiles={sentFiles} setSentFiles={setSendFiles} recievedFiles={recievedFiles} setRecievedFiles={setRecievedFiles}></SideBar>
                     </div>
                     <div className="col-span-3 p-12 overflow-auto scrollbar-hide scroll-smooth">{sentFiles ? <SentFileTable /> : <AccessorFileTable />}</div>
                 </div>
