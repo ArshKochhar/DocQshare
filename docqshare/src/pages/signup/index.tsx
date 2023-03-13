@@ -49,7 +49,7 @@ const Signup  = () => {
           walletId: walletId,
         }, {
           headers: {
-            'Authorization': token,
+            'authorization': token,
           }
         }).then(response => {
           // token is stored on client-side 

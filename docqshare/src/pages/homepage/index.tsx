@@ -1,5 +1,4 @@
-import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { motion } from 'framer-motion';
 import DevSection from '../../components/homepage/dev_section';
 import TopNavigationHome from '../../components/topnavigation/index_home';
 
@@ -10,8 +9,6 @@ const Home = () => {
   const gav: string = require('../../assets/gav_pfp.jpg');
   const derek: string = require('../../assets/derek_pfp.jpg');
 
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
 
 
 

@@ -12,7 +12,6 @@ interface sidebarProps {
     setSentFiles: any;
     recievedFiles: boolean;
     setRecievedFiles: any;
-    account: object;
 }
 
 const SideBar = (props: sidebarProps) => {
@@ -54,7 +53,7 @@ const SideBar = (props: sidebarProps) => {
                 walletId: requestedAccounts[0]
             }, 
             {
-                headers: { 'Authorization': token }
+                headers: { 'authorization': token }
             }).then(async (response) => {
                 dispatch(setUserName(response.data.userName));
                 return;
@@ -90,7 +89,7 @@ const SideBar = (props: sidebarProps) => {
                 </div>
                 {props.sentFiles && (
                     <div className="w-full absolute bottom-10 flex justify-center">
-                        <AddFile account={props.account} />
+                        <AddFile />
                     </div>
                 )}
             </div>

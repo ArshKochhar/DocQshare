@@ -21,7 +21,7 @@ const TopNavigationHome = ({howItWorks, aboutUs, landingPage}: navParams) => {
             axios.post("http://localhost:3500/auth/verify", { }, 
             {
                 headers: {
-                'Authorization': token,
+                'authorization': token,
                 }
             }).then(() => {
                 setAlreadyLoggedIn(true);

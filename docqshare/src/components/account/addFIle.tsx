@@ -2,9 +2,8 @@ import { Dialog, Transition } from "@headlessui/react";
 import axios from "axios";
 import { Fragment, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import AddRecipientButton from "../buttons/addRecipientButton";
 import { sha256 } from "crypto-hash";
-import { addFileToList, setCurrentFile, addCurrentFileAccessor, User, setCurrentFileAccessorList } from "src/redux/userSlice";
+import { addFileToList, setCurrentFile, User } from "src/redux/userSlice";
 import Web3 from "web3";
 import { ethers } from "ethers";
 import { deployedContract } from "src/config";
@@ -16,19 +15,13 @@ export interface MsgObject {
     color: string;
 }
 
-interface AddFileProps {
-    account: object;
-}
-
-export default function AddFile(props: AddFileProps) {
+export default function AddFile() {
     const dispatch = useDispatch<any>();
     const userState: User = useSelector((state: any) => state.user);
-    const { currentFile, walletId } = userState;
+    const { currentFile } = userState;
 
-    const accountInfo = props.account;
     let [isOpen, setIsOpen] = useState(false);
     const [fileSnapshot, setFileSnapshot] = useState<any>(null);
-    const [currRecipient, setCurrRecipient] = useState<string | null>("");
     const [msg, setMsg] = useState<MsgObject | null>(null);
     const contract_abi = abi;
     const [hash, setHash] = useState("");
@@ -41,7 +34,6 @@ export default function AddFile(props: AddFileProps) {
     function closeModal() {
         setIsOpen(false);
         setFileSnapshot(null);
-        setCurrRecipient(null);
         dispatch(setCurrentFile({ id: null, owner: null, accessor: [], payload: null, name: null, hash: null }));
     }
 
@@ -62,7 +54,6 @@ export default function AddFile(props: AddFileProps) {
                     const requestedAccounts = await window.web3.eth.requestAccounts();
                     const temp_hash = await sha256(reader.result);
                     setHash(temp_hash);
-                    console.log(temp_hash, "HASH");
                     dispatch(
                         setCurrentFile({
                             ...currentFile,
@@ -96,7 +87,9 @@ export default function AddFile(props: AddFileProps) {
                     }
                 )
                 .then(async (response) => {
-                    dispatch(addFileToList(response.data.file));
+                    const f = {...response.data.file, accessor: []}
+                    dispatch(addFileToList(f));
+                    changeMessage("bg-green-500", "File Added Successfully");
                     return;
                 })
                 .catch((err) => {
@@ -114,77 +107,12 @@ export default function AddFile(props: AddFileProps) {
             const signer = provider.getSigner();
             const contract = new ethers.Contract(deployedContract, contract_abi, signer);
             let tx = await contract.addOwnership(hash, 1);
-            console.log(tx, "Adding an owner to a document");
             const ownerTxn = await tx.wait();
             console.log("Finished Adding Ownership to the document, Transaction Hash is:", ownerTxn.transactionHash);
         }
         await addFile();
     };
 
-    const handleAddRecipient = async (): Promise<void> => {
-        // check if wallet is of a valid DocQshare user
-        if (walletId && currRecipient === walletId[0]) {
-            changeMessage("bg-red-600", "Cannot Add Yourself.");
-            setTimeout(() => {
-                setMsg(null);
-            }, 500);
-            setCurrRecipient("");
-        } else if (currRecipient && !currentFile.accessor.includes(currRecipient)) {
-            // Chain Call to add access
-            // const provider = new ethers.providers.Web3Provider(window.ethereum);
-            // const signer = provider.getSigner();
-            // const contract = new ethers.Contract(deployedContract, contract_abi, signer);
-            // let tx = await contract.addAccess(currRecipient, "url", 1);
-            // console.log(contract, "ARE WE HERE");
-            // console.log(tx, "Adding an Access to a document");
-            // const accessTxn = await tx.wait();
-            // console.log("Finished Adding Access to the document, Transaction Hash is:", accessTxn.transactionHash);
-            axios
-                .post(
-                    "http://localhost:3500/auth/checkWallet",
-                    { walletId: currRecipient },
-                    {
-                        headers: {
-                            Authorization: token,
-                        },
-                    }
-                )
-                .then((response: any) => {
-                    changeMessage(response.data.color, response.data.message);
-                    dispatch(addCurrentFileAccessor(currRecipient));
-                    setCurrRecipient("");
-                    setTimeout(() => {
-                        setMsg(null);
-                    }, 500);
-                })
-                .catch((error: any) => {
-                    changeMessage(error.response.data.color, error.response.data.message);
-                    setTimeout(() => {
-                        setMsg(null);
-                    }, 500);
-                });
-        } else {
-            changeMessage("bg-red-600", "Recipient Already Added.");
-            setTimeout(() => {
-                setMsg(null);
-            }, 500);
-        }
-    };
-
-    async function handleRemoveRecipient(recipient: string) {
-        // const provider = new ethers.providers.Web3Provider(window.ethereum);
-        // const signer = provider.getSigner();
-        // const contract = new ethers.Contract(deployedContract, contract_abi, signer);
-        // let tx = await contract.removeAccess(recipient, "url", 1);
-        // console.log(tx, "Adding an Access to a document");
-        // const removeAccessTx = await tx.wait();
-        // console.log("Finished Removing Access to the document, Transaction Hash is:", removeAccessTx.transactionHash);
-        dispatch(setCurrentFileAccessorList([...currentFile.accessor.filter((r: string) => r !== recipient)]));
-        changeMessage("bg-green-600", "Succesfully Removed.");
-        setTimeout(() => {
-            setMsg(null);
-        }, 1000);
-    }
 
     return (
         <>

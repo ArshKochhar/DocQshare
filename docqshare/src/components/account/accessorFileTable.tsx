@@ -35,7 +35,6 @@ function AccessorFileTable() {
             )
             .then(async (response) => {
                 const files = response.data.files.map((file: any) => {
-                    setLoaded(true);
                     return {
                         id: file.file_id,
                         accessor: [],
@@ -52,8 +51,8 @@ function AccessorFileTable() {
                 // eslint-disable-next-line array-callback-return
                 const integrityCheck = await Promise.all(files.map(async (file: FileObj) => await contract.checkAccess(file.hash)));
                 const checkedFiles = files.filter((data: FileObj, index: number) => integrityCheck[index]);
-                console.log(checkedFiles);
                 dispatch(setListOfAccessedFiles([...checkedFiles]));
+                setLoaded(true);
                 return;
             })
             .catch((err) => {

@@ -7,11 +7,12 @@ declare var window: any
 export interface DeleteProps {
     fileId: string|null;
     fileName: string|null;
+    fileOwner: string|null;
     setLoaded: (loaded: boolean) => void;
     getFiles: () => void;
 }
 
-function ConfirmDelete({fileId, fileName, setLoaded, getFiles}: DeleteProps) {
+function ConfirmDelete({fileId, fileName, fileOwner, setLoaded, getFiles}: DeleteProps) {
     
     let [isOpen, setIsOpen] = useState(false);
 
@@ -29,14 +30,14 @@ function ConfirmDelete({fileId, fileName, setLoaded, getFiles}: DeleteProps) {
             setLoaded(false);
             await window.ethereum.request({method: 'eth_requestAccounts'});
             window.web3 = new Web3(window.ethereum);
-            const requestedAccounts = await window.web3.eth.requestAccounts();
-            
+            const token = localStorage.getItem("authToken");
             axios.post("http://localhost:3500/file/deleteFile", 
             { 
-                file_id: fileId
+                file_id: fileId,
+                owner: fileOwner
             }, 
             {
-                headers: { 'Authorization': requestedAccounts[0] }
+                headers: { 'authorization': token }
             }).then(async (response) => {
                 closeModal();
                 return;
