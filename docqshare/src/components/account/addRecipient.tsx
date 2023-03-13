@@ -82,7 +82,6 @@ function AddRecipient({ file, getFiles }: { file: FileObj; getFiles: () => void 
                     }, 500);
                 });
         } else {
-            console.log("PADKNSIUB");
             changeMessage("bg-red-600", "Recipient Already Added.");
             setTimeout(() => {
                 setMsg(null);
