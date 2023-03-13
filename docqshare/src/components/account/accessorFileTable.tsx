@@ -44,7 +44,6 @@ function AccessorFileTable() {
                         hash: file.Hash,
                     };
                 });
-
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
                 const signer = provider.getSigner();
                 const contract = new ethers.Contract(deployedContract, contract_abi, signer);
